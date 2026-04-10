@@ -1,0 +1,222 @@
+/* =========================================================
+   1. ROOT & BASE STYLES
+   ========================================================= */
+:root {
+    --sidebar-width: 260px;
+    --primary-color: #4361ee;
+    --primary-light: rgba(67, 97, 238, 0.1);
+    --dark-bg: #1e1e2d;
+    --light-bg: #f4f7fe;
+    --text-muted: #a2a3b7;
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--light-bg);
+    margin: 0;
+    overflow-x: hidden;
+    color: #2b2b35;
+}
+
+/* =========================================================
+   2. SIDEBAR NAVIGATION
+   ========================================================= */
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--dark-bg);
+    color: var(--text-muted);
+    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1050;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar.collapsed {
+    left: calc(var(--sidebar-width) * -1);
+}
+
+.sidebar-brand {
+    padding: 2rem 1.5rem;
+    color: white;
+    font-weight: 700;
+    font-size: 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    color: var(--text-muted);
+    padding: 12px 1.5rem;
+    border-radius: 8px;
+    margin: 4px 12px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.nav-link i {
+    font-size: 1.2rem;
+    margin-right: 12px;
+}
+
+.nav-link:hover {
+    color: white;
+    background: rgba(255,255,255,0.05);
+}
+
+.nav-link.active {
+    background: var(--primary-color);
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+}
+
+/* =========================================================
+   3. MAIN CONTENT & NAVBAR
+   ========================================================= */
+.main-wrapper {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.main-wrapper.expanded {
+    margin-left: 0;
+}
+
+.top-navbar {
+    background: white;
+    padding: 0.8rem 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+#sidebarCollapse {
+    background: var(--light-bg);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    color: var(--dark-bg);
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+#sidebarCollapse:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.content-body {
+    padding: 2rem;
+    flex: 1;
+}
+
+/* =========================================================
+   4. DASHBOARD CARDS & ANIMATIONS
+   ========================================================= */
+.card-stat {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background: white;
+}
+
+.card-stat:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.15);
+}
+
+.card-stat:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.icon-box {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+}
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to { transform: scale(4); opacity: 0; }
+}
+
+/* =========================================================
+   5. DATA TABLES & USER COMPONENTS
+   ========================================================= */
+.data-table-container {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--light-bg);
+}
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-action {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    transition: 0.2s;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-action:hover {
+    transform: translateY(-3px);
+    filter: brightness(0.9);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--light-bg); }
+::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
