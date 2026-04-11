@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ thống Quản trị | Admin VF-RENTAL</title>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
@@ -62,6 +62,13 @@
             <c:when test="${view == 'dashboard'}">
                 <jsp:include page="view/dashboard.jsp" />
             </c:when>
+<%--chuc nang cho user--%>
+            <c:when test="${view == 'users'}">
+                <jsp:include page="view/user/user-list.jsp" />
+            </c:when>
+<%--chuc nang cho san pham--%>
+<%-- chuc nang cho don hang--%>
+
 
             <%-- Mặc định hiện Dashboard --%>
             <c:otherwise>

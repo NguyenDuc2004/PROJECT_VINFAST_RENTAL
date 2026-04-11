@@ -19,6 +19,8 @@ public class DashBoardServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
+        int TotalUser = userService.getTotalUser(0);
+        req.setAttribute("TotalUser",TotalUser);
         req.setAttribute("view","dashboard");
         req.getRequestDispatcher("/admin/layout.jsp").forward(req, resp);
     }
