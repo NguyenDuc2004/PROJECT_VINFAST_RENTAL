@@ -16,14 +16,19 @@
     <%-- 2. QUẢN LÝ USER: Active khi view là users --%>
     <a class="nav-link ${view == 'users' ? 'active' : ''}"
        href="${pageContext.request.contextPath}/user">
-      <i class="bi bi-people-fill"></i> Quản lý User
+      <i class="bi bi-people-fill"></i> Quản lý người dùng
     </a>
 
     <%-- 3. SẢN PHẨM: Active khi view là products --%>
     <a class="nav-link ${view == 'products' ? 'active' : ''}"
        href="${pageContext.request.contextPath}/product">
-      <i class="bi bi-box-seam-fill"></i> Sản phẩm
+      <i class="bi bi-box-seam-fill"></i> Quản lý sản phẩm
     </a>
+      <%-- 3. ĐƠN ĐẶT XE: Active khi view là bookings --%>
+      <a class="nav-link ${view == 'bookings' ? 'active' : ''}"
+         href="${pageContext.request.contextPath}/booking">
+        <i class="bi bi-cart-fill"></i> Quản lý đơn hàng
+      </a>
 
     <%-- 4. NHẬT KÝ HỆ THỐNG: Active khi view là history --%>
     <a class="nav-link ${param.view == 'history' ? 'active' : ''}"

@@ -9,10 +9,15 @@
 
         <h5 class="mb-0 fw-bold text-dark">
             <c:choose>
+<%--                user--%>
                 <c:when test="${view == 'users'}">Quản lý người dùng</c:when>
                 <c:when test="${view == 'view'}">Thông tin người dùng</c:when>
                 <c:when test="${view == 'edit'}">Cập nhật thông tin</c:when>
+<%--                sản phẩm--%>
                 <c:when test="${view == 'products'}">Danh sách sản phẩm</c:when>
+<%--                đơn hàng--%>
+                <c:when test="${view == 'bookings'}">Danh sách đơn hang </c:when>
+<%--                lịch sử đăng nhập--%>
                 <c:when test="${view == 'history'}">Nhật ký hệ thống</c:when>
                 <c:otherwise>Tổng quan Dashboard</c:otherwise>
             </c:choose>
