@@ -14,9 +14,12 @@ import java.util.List;
 public class UserDAO implements IUserDAO{
     public static final String CHECK_LOGIN = "SELECT u.id,u.fullname, u.email, u.role " +
             "FROM users u WHERE u.email = ? AND u.password = ? AND u.status = 1";
-    public static final String getCountUser = "select Count(*)from users where role = ?;";
+    public static final String getCountUser = "select Count(*)from users where role = ? AND status = 1;";
     public static final String SELECT_USERS = "select *from users where 1=1";
-    public static final String DELTE_USER = "DELETE from users where id = ?;";
+    public static final String DELTE_USER = "UPDATE users SET status = 0 where id = ?;";
+    public static final String GET_USER_BY_ID = "SELECT *FROM users WHERE id = ?";
+    public static final String UPDATE_USER = "UPDATE users SET fullname = ?,email = ?,phone = ?,address = ?,role= ?,status = ? WHERE id = ?;";
+    public static final String INSERT_USER = "INSERT INTO users (fullname, email, password, phone, role, address) VALUES (?, ?, ?, ?, ?, ?)";
 
     @Override
     public User checkLogin(String email, String password) {
@@ -92,9 +95,48 @@ public class UserDAO implements IUserDAO{
 
     @Override
     public User getUserById(int id) {
-        return null;
+        try(Connection conn = DbConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(GET_USER_BY_ID)
+        ) {
+            User user = null;
+            ps.setInt(1,id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                int id_user = rs.getInt("id");
+                String fullname = rs.getString("fullname");
+                String email = rs.getString("email");
+                String phone = rs.getString("phone");
+                String address = rs.getString("address");
+                String createdAt = rs.getString("created_at");
+                int role = rs.getInt("role");
+                int status = rs.getInt("status");
+                user = new User(id_user,fullname,email,phone ,address,role,status,createdAt);
+            }
+            return user;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    @Override
+    public boolean insertUser(User user) {
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(INSERT_USER)) {
+            ps.setString(1, user.getFullname());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.setString(4, user.getPhone());
+            ps.setInt(5, user.getRole());
+            ps.setString(6, user.getAddress());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi DB: " + e.getMessage());
+        }
+    }
+
+    //xoa mem
     @Override
     public boolean deletedUser(int id) {
         try(Connection conn = DbConnection.getConnection();
@@ -104,15 +146,27 @@ public class UserDAO implements IUserDAO{
             int rowDeleted = ps.executeUpdate();
             return rowDeleted > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("LOI USER DAO");
-            return false;
+            throw new RuntimeException("Lỗi SQL tại DAO: " + e.getMessage());
         }
     }
 
     @Override
     public boolean editedUser(User user) {
-        return false;
+        try(Connection conn = DbConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(UPDATE_USER)
+        ) {
+            ps.setString(1, user.getFullname());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPhone());
+            ps.setString(4, user.getAddress());
+            ps.setInt(5, user.getRole());
+            ps.setInt(6, user.getStatus());
+            ps.setInt(7, user.getId());
+            int rowUpdated = ps.executeUpdate();
+            return rowUpdated > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi SQL tại DAO: " + e.getMessage());
+        }
     }
 
     @Override
@@ -128,4 +182,19 @@ public class UserDAO implements IUserDAO{
         }
         return 0;
     }
+
+    @Override
+    public boolean checkEmailExists(String email) {
+        String sql = "SELECT id FROM users WHERE email = ? LIMIT 1";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
 }

@@ -8,7 +8,9 @@ public interface IUserDAO {
     User checkLogin(String email, String password);
     List<User> filterSearchListUser(String keyword,String role,String status);
     User getUserById(int id);
+    boolean insertUser(User user);
     boolean deletedUser(int id);
     boolean editedUser(User user);
     int countUser(int role);
+    public boolean checkEmailExists(String email);
 }

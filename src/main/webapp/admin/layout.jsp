@@ -66,6 +66,12 @@
             <c:when test="${view == 'users'}">
                 <jsp:include page="view/user/user-list.jsp" />
             </c:when>
+            <c:when test="${view == 'view'}">
+                <jsp:include page="view/user/user-detail.jsp" />
+            </c:when>
+            <c:when test="${view == 'edit'}">
+                <jsp:include page="view/user/user-edit.jsp" />
+            </c:when>
 <%--chuc nang cho san pham--%>
 <%-- chuc nang cho don hang--%>
 

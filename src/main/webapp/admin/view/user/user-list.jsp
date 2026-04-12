@@ -4,7 +4,7 @@
 
 <div class="container-fluid">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="h3 mb-0 text-gray-800 text-uppercase fw-bold">Quản lý tài khoản</h2>
+    <h2 class="h3 mb-0 text-gray-800 text-uppercase fw-bold">Quản lý người dùng</h2>
     <%-- Chỉ ADMIN mới thấy nút Thêm --%>
     <c:if test="${sessionScope.currUser.role == 1}">
       <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addUserModal">
@@ -86,7 +86,7 @@
             <td>
               <c:choose>
                 <c:when test="${u.role == 1}"><span class="badge badge-admin">QUẢN TRỊ VIÊN</span></c:when>
-                <c:when test="${u.role == 2}"><span class="badge badge-admin">NHÂN VIÊN</span></c:when>
+                <c:when test="${u.role == 2}"><span class="badge badge-staff">NHÂN VIÊN</span></c:when>
                 <c:otherwise><span class="badge badge-user">NGƯỜI DÙNG</span></c:otherwise>
               </c:choose>
             </td>
@@ -140,7 +140,7 @@
     </div>
 
 <%--    modal them moi--%>
-    <form action="user" method="post" class="needs-validation" >
+    <form action=""user?action=create&openModal=true"" method="post" class="needs-validation" >
       <input type="hidden" name="action" value="create">
 
       <div class="modal-body p-4 bg-light">
@@ -152,7 +152,7 @@
                 <label class="form-label small fw-bold text-muted">Email</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="bi bi-person"></i></span>
-                  <input type="text" name="username" class="form-control" required placeholder="example@gmail.com">
+                  <input type="text" name="email" class="form-control" required placeholder="example@gmail.com">
                 </div>
               </div>
               <div class="mb-0">
@@ -170,11 +170,15 @@
               <h6 class="fw-bold text-primary mb-3"><i class="bi bi-card-list me-2"></i>Thông tin chi tiết</h6>
               <div class="mb-3">
                 <label class="form-label small fw-bold text-muted">Họ và tên</label>
-                <input type="text" name="fullname" class="form-control" required placeholder="Nhập họ và tên......">
+                <input type="text" name="fullname" class="form-control"  placeholder="Nhập họ và tên......">
               </div>
               <div class="mb-0">
-                <label class="form-label small fw-bold text-muted">Email</label>
-                <input type="email" name="email" class="form-control" required placeholder="vd: duc@example.com">
+                <label class="form-label small fw-bold text-muted">Địa chỉ</label>
+                <input type="text" name="address" class="form-control"  placeholder="vd: Thanh Hóa">
+              </div>
+              <div class="mb-0">
+                <label class="form-label small fw-bold text-muted">Số điện thoại</label>
+                <input type="text" name="phone" class="form-control"  placeholder="vd: 0903134522">
               </div>
             </div>
           </div>
@@ -229,6 +233,22 @@
       }
     })
   }
+  document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Nếu URL có openModal hoặc trong Session có tin nhắn lỗi
+    if (urlParams.get('openModal') === 'true' || "${not empty sessionScope.toastMsg}" === "true") {
+
+      var modalElement = document.getElementById('addUserModal');
+      if (modalElement) {
+        var myModal = new bootstrap.Modal(modalElement);
+        myModal.show();
+
+        // Mẹo nhỏ: Xóa tham số trên URL cho sạch sau khi đã mở Modal
+        window.history.replaceState({}, document.title, "user");
+      }
+    }
+  });
 </script>
 
 <style>
