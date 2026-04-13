@@ -56,14 +56,26 @@
 
     <main class="content-body">
         <c:choose>
-            <%-- Dùng requestScope.view (được gửi từ Servlet) để điều hướng --%>
-            <%--            user--%>
+            <%-- 1. Trang danh sách (Khi view == 'products') --%>
+            <c:when test="${view == 'products'}">
+                <jsp:include page="view/car/car.list.jsp" />
+            </c:when>
 
+            <%-- 2. Trang chi tiết (Khi view == 'view') --%>
+            <c:when test="${view == 'view'}">
+                <jsp:include page="view/car/car-detail.jsp" />
+            </c:when>
+
+            <%-- 3. Trang sửa (Khi view == 'edit') --%>
+            <c:when test="${view == 'edit'}">
+                <jsp:include page="view/car/car-edit.jsp" />
+            </c:when>
+
+            <%-- 4. Trang Dashboard --%>
             <c:when test="${view == 'dashboard'}">
                 <jsp:include page="view/dashboard.jsp" />
             </c:when>
 
-            <%-- Mặc định hiện Dashboard --%>
             <c:otherwise>
                 <jsp:include page="view/dashboard.jsp" />
             </c:otherwise>
