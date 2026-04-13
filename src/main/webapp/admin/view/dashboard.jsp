@@ -101,6 +101,44 @@
   </div>
 </div>
 
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách đơn hàng thuê xe</h6>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Dòng xe</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Ngày đặt</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="order" items="${listOrder}">
+                <tr>
+                    <td>${order.id}</td>
+                    <td>${order.customerName}</td>
+                    <td>${order.carModel}</td>
+                    <td>${order.totalPrice} VNĐ</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${order.status == 0}"><span class="badge bg-warning text-dark">Chờ duyệt</span></c:when>
+                            <c:when test="${order.status == 1}"><span class="badge bg-success">Đang thuê</span></c:when>
+                            <c:otherwise><span class="badge bg-secondary">Khác</span></c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>${order.orderDate}</td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <script>
   // Script nhỏ để hiển thị thời gian thực tế
   document.getElementById('current-time').innerText = new Date().toLocaleString('vi-VN');
