@@ -73,6 +73,15 @@ public class UserService {
         if (user.getId() == currentAdminId && user.getRole() != 1) {
             throw new Exception("Bạn không thể tự hạ quyền Quản trị viên của chính mình!");
         }
+        if (user.getFullname() == null || user.getFullname().trim().isEmpty()) {
+            throw new Exception("Họ và tên không được để trống!");
+        }
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+
+        if (user.getEmail() == null || !user.getEmail().matches(emailRegex)) {
+            throw new Exception("Email không hợp lệ!");
+        }
+
         if (!user.getEmail().equals(oldUser.getEmail())) {
             if (userDAO.checkEmailExists(user.getEmail())) {
                 throw new Exception("Email này đã tồn tại");
