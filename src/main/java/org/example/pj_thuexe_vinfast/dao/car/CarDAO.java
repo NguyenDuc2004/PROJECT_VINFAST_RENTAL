@@ -1,9 +1,11 @@
 package org.example.pj_thuexe_vinfast.dao.car;
 
 import org.example.pj_thuexe_vinfast.modal.Car;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.example.pj_thuexe_vinfast.dbConnection.DbConnection.getConnection;
 
 public class CarDAO implements ICarDAO {
@@ -15,8 +17,9 @@ public class CarDAO implements ICarDAO {
         sql.append("FROM cars c JOIN categories cat ON c.category_id = cat.id WHERE 1=1 ");
 
         if (keyword != null && !keyword.isEmpty()) sql.append(" AND model_name LIKE ?");
-        if (status != null && !status.isEmpty()) { sql.append(" AND status = ?");}
-        else sql.append(" AND c.status = 'AVAILABLE'");
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND status = ?");
+        } else sql.append(" AND c.status = 'AVAILABLE'");
         if (category != null && !category.isEmpty()) sql.append(" AND category_id = ?");
 
         try (Connection conn = getConnection();
@@ -77,9 +80,9 @@ public class CarDAO implements ICarDAO {
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, car.getCategoryId());
-            ps.setInt(2, car.getLocationId());
+            ps.setInt(2, 1); // location_id mặc định
             ps.setString(3, car.getModelName());
-            ps.setString(4, car.getLicensePlate());
+            ps.setString(4, car.getLicensePlate()); // Biển số lấy từ form
             ps.setDouble(5, car.getPricePerDay());
             ps.setString(6, car.getImageUrl());
             ps.setString(7, car.getStatus());
@@ -92,7 +95,6 @@ public class CarDAO implements ICarDAO {
 
     @Override
     public void delete(int id) {
-        // Thay vì xóa, ta cập nhật trạng thái thành 'DELETED' (hoặc 'UNAVAILABLE' tùy ông chọn)
         String sql = "UPDATE cars SET status = 'UNAVAILABLE' WHERE id = ?";
 
         try (Connection conn = getConnection();

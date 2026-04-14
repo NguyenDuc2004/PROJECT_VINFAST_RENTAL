@@ -3,10 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="vi_VN"/>
 
-<%-- Khai báo Bean lấy ngày hiện tại để tránh lỗi PropertyNotFound --%>
-<jsp:useBean id="now" class="java.util.Date" />
+<jsp:useBean id="now" class="java.util.Date"/>
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
@@ -21,15 +21,16 @@
 
     body {
         background-color: var(--bg-light);
-        background-image:
-                radial-gradient(circle at top right, rgba(0, 98, 255, 0.03), transparent),
-                radial-gradient(circle at bottom left, rgba(0, 98, 255, 0.03), transparent);
+        background-image: radial-gradient(circle at top right, rgba(0, 98, 255, 0.03), transparent),
+        radial-gradient(circle at bottom left, rgba(0, 98, 255, 0.03), transparent);
         font-family: 'Plus Jakarta Sans', sans-serif;
         color: var(--text-main);
         min-height: 100vh;
     }
 
-    .hero-section { padding: 60px 0 40px; }
+    .hero-section {
+        padding: 60px 0 40px;
+    }
 
     .glass-header {
         background: var(--card-white);
@@ -64,7 +65,9 @@
         transition: transform 0.3s ease;
     }
 
-    .img-main { filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1)); }
+    .img-main {
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1));
+    }
 
     .modern-label {
         font-size: 0.8rem;
@@ -190,8 +193,10 @@
                     <div class="text-start mt-auto">
                         <label class="modern-label">ĐƯỜNG DẪN HÌNH ẢNH (CDN/URL)</label>
                         <div class="input-group bg-light rounded-4 overflow-hidden p-1">
-                            <span class="input-group-text bg-transparent border-0"><i class="bi bi-link-45deg text-primary fs-4"></i></span>
-                            <input type="text" name="imageUrl" class="form-control border-0 bg-transparent shadow-none py-2"
+                            <span class="input-group-text bg-transparent border-0"><i
+                                    class="bi bi-link-45deg text-primary fs-4"></i></span>
+                            <input type="text" name="imageUrl"
+                                   class="form-control border-0 bg-transparent shadow-none py-2"
                                    value="${car.imageUrl}" style="font-size: 0.9rem;">
                         </div>
                     </div>
@@ -208,9 +213,10 @@
                     <div class="row g-4 mb-5">
                         <div class="col-md-6">
                             <label class="modern-label">GIÁ THUÊ ƯU ĐÃI (VNĐ/Ngày)</label>
-                            <fmt:formatNumber value="${car.pricePerDay}" pattern="#,###" var="formattedPrice" />
-                            <input type="text" class="form-control modern-input text-primary fs-4 fw-bold" value="${formattedPrice}">
-                            <input type="hidden" name="price" value="${car.pricePerDay}">
+                            <fmt:formatNumber value="${car.pricePerDay}" pattern="#,###" var="formattedPrice"/>
+                            <input type="text" name="price" id="edit_price"
+                                   class="form-control modern-input text-primary fs-4 fw-bold"
+                                   value="${formattedPrice}">
                         </div>
                         <div class="col-md-6">
                             <label class="modern-label">PHÂN LOẠI XE</label>
@@ -225,8 +231,12 @@
                     <div class="mb-5">
                         <label class="modern-label">TRẠNG THÁI VẬN HÀNH</label>
                         <select name="status" class="form-select modern-input" style="border-left: 5px solid #10b981;">
-                            <option value="AVAILABLE" ${car.status == 'AVAILABLE' ? 'selected' : ''}>🟢 Sẵn sàng phục vụ</option>
-                            <option value="UNAVAILABLE" ${car.status == 'UNAVAILABLE' ? 'selected' : ''}>🔴 Đang bảo trì hệ thống</option>
+                            <option value="AVAILABLE" ${car.status == 'AVAILABLE' ? 'selected' : ''}>🟢 Sẵn sàng phục
+                                vụ
+                            </option>
+                            <option value="UNAVAILABLE" ${car.status == 'UNAVAILABLE' ? 'selected' : ''}>🔴 Đang bảo trì
+                                hệ thống
+                            </option>
                         </select>
                     </div>
 
@@ -256,3 +266,40 @@
         </div>
     </form>
 </div>
+
+<script>
+    const priceInput = document.getElementById('add_price');
+
+    if (priceInput) {
+        priceInput.addEventListener('input', function (e) {
+            // 1. Lưu lại vị trí con trỏ để không bị nhảy về cuối khi đang xóa
+            let cursorPosition = this.selectionStart;
+            let originalLength = this.value.length;
+
+            // 2. Chỉ lấy số thuần túy
+            let rawValue = this.value.replace(/[^0-9]/g, '');
+
+            if (rawValue === "") {
+                this.value = "";
+                return;
+            }
+
+            // 3. Định dạng số
+            let formattedValue = new Intl.NumberFormat('vi-VN').format(parseInt(rawValue));
+            this.value = formattedValue;
+
+            // 4. Tính toán lại vị trí con trỏ để trải nghiệm xóa/sửa không bị "kì"
+            let newLength = this.value.length;
+            cursorPosition = cursorPosition + (newLength - originalLength);
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        });
+
+        // Chặn nhập chữ ngay từ đầu
+        priceInput.addEventListener('keydown', function (e) {
+            if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+                if (e.ctrlKey || e.metaKey) return; // Cho phép Ctrl+C, Ctrl+V
+                e.preventDefault();
+            }
+        });
+    }
+</script>

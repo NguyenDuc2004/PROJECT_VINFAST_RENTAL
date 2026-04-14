@@ -13,26 +13,34 @@ public class CarService {
         return carDAO.filterSearchCars(keyword, status, category);
     }
 
-    public void addProduct(Car car) {
+    public void addProduct(Car car) throws Exception {
+        // 1. Kiểm tra tên xe
+        if (car.getModelName() == null || car.getModelName().trim().length() < 10) {
+            throw new Exception("Thêm thất bại: Tên xe phải từ 10 ký tự trở lên!");
+        }
+
+        // 2. Kiểm tra giá thuê
+        if (car.getPricePerDay() <= 0 || car.getPricePerDay() > 10000000) {
+            throw new Exception("Thêm thất bại: Giá thuê phải từ 1VND đến 10.000.000VND!");
+        }
         carDAO.insert(car);
     }
 
     public void removeProduct(int id) throws Exception {
         // 1. Check ID
         if (id <= 0) {
-            throw new Exception("ID sản phẩm không hợp lệ!");
+            throw new Exception("ID không hợp lệ!");
         }
 
         // 2. Check tồn tại
         Car car = carDAO.getById(id);
         if (car == null) {
-            System.out.println("DEBUG: Khong tim thay Car id = " + id);
-            throw new Exception("Xe này không tồn tại trên hệ thống!");
+            throw new Exception("Xe không tồn tại!");
         }
 
-        // 3. Check trạng thái (Dùng .equals và viết đúng chính tả)
+        // 3. Check trạng thái
         if ("UNAVAILABLE".equals(car.getStatus())) {
-            throw new Exception("Xe này đã bị xóa hoặc đang ngừng kinh doanh!");
+            throw new Exception("Xe này đã được xóa trước đó rồi!");
         }
 
         // 4. Gọi DAO để xóa mềm
@@ -43,34 +51,29 @@ public class CarService {
         return carDAO.getById(id);
     }
 
-    public String updateProduct(Car c) throws Exception {
-        // 1. Nghiệp vụ: Kiểm tra xe có tồn tại không
-        Car existingCar = carDAO.getById(c.getId());
-        if (existingCar == null) {
-            throw new Exception("Lỗi: Không tìm thấy xe để cập nhật!");
+    public void updateProduct(Car c) throws Exception {
+
+        // 1.Tên (10 - 155 ký tự)
+        if (c.getModelName() == null || c.getModelName().trim().length() < 10 || c.getModelName().trim().length() > 155) {
+            throw new Exception("Sửa thất bại: Tên xe phải từ 10 ký tự trở lên!");
         }
 
-        // 2. Nghiệp vụ: Kiểm tra tính hợp lệ của dữ liệu (Validation)
-        if (c.getModelName() == null || c.getModelName().trim().isEmpty()) {
-            throw new Exception("Lỗi: Tên xe không được để trống!");
+        // 2.Giá (0 < Giá < 10,000,000)
+        double price = c.getPricePerDay();
+        if (price <= 0 || price > 10000000) {
+            throw new Exception("Sửa thất bại: Giá thuê phải từ 1VND đến 10.000.000VND!");
         }
 
-        if (c.getPricePerDay() <= 0) {
-            throw new Exception( "Lỗi: Giá thuê phải lớn hơn 0!");
+        // 3. Kiểm tra xe có tồn tại không trước khi sửa
+        Car existing = carDAO.getById(c.getId());
+        if (existing == null) {
+            throw new Exception("Sửa thất bại: Xe không tồn tại!");
         }
-
-        // 3. Nghiệp vụ: Giữ lại các thông tin không cho phép sửa từ giao diện
-        // Ví dụ: Không cho sửa biển số xe (license_plate) để tránh gian lận
-        c.setLicensePlate(existingCar.getLicensePlate());
 
         // 4. Thực hiện cập nhật
-        boolean isSuccess = carDAO.update(c);
-
-        if (isSuccess) {
-            System.out.println("Cập nhật thành công xe ID: " + c.getId());
-            throw new Exception("SUCCESS") ;
-        } else {
-            throw new Exception("Lỗi: Cập nhật thất bại do lỗi hệ thống!") ;
+        boolean success = carDAO.update(c);
+        if (!success) {
+            throw new Exception("Lỗi hệ thống khi cập nhật!");
         }
     }
 }

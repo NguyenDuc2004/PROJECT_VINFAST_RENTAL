@@ -86,16 +86,17 @@
                                      onerror="this.src='https://img.vanhai.vn/202304/xe-dien-vinfast-vf8.jpg'">
                                 <div>
                                     <div class="fw-bold">${p.modelName}</div>
-                                    <span class="badge bg-dark mt-1" style="letter-spacing: 1px;">30H - ${p.id}99.99</span>
+                                    <span class="badge bg-dark mt-1"
+                                          style="letter-spacing: 1px;">30H - ${p.id}99.99</span>
                                     <div class="text-muted small">
-                                        ${p.categoryName}
+                                            ${p.categoryName}
                                     </div>
                                 </div>
                             </div>
                         </td>
 
                         <td class="fw-bold text-primary">
-                            <fmt:formatNumber value="${p.pricePerDay}" pattern="#,###"/> VNĐ
+                            <fmt:formatNumber value="${p.pricePerDay}" pattern="#,###"/> VND
                         </td>
 
                         <td>
@@ -161,9 +162,10 @@
                         <div class="col-md-6">
                             <label class="fw-bold small mb-1 text-secondary text-uppercase">Giá thuê (VNĐ/ngày)</label>
                             <div class="input-group">
-                                <input type="text" id="priceDisplay" class="form-control fw-bold text-primary" placeholder="Tối đa 10.000.000" required>
-                                <span class="input-group-text bg-light">VNĐ</span>
-                                <input type="hidden" name="price" id="priceReal">
+                                <input type="text" name="price" id="add_price"
+                                       class="form-control fw-bold text-primary"
+                                       placeholder="Ví dụ: 500.000" required>
+                                <span class="input-group-text bg-light">VND</span>
                             </div>
                         </div>
 
@@ -178,7 +180,8 @@
 
                         <div class="col-12">
                             <label class="fw-bold small mb-1 text-secondary text-uppercase">Link ảnh (URL)</label>
-                            <input type="text" name="imageUrl" class="form-control" placeholder="Dán đường dẫn ảnh tại đây...">
+                            <input type="text" name="imageUrl" class="form-control"
+                                   placeholder="Dán đường dẫn ảnh tại đây...">
                         </div>
 
                         <div class="col-12">
@@ -218,5 +221,39 @@
                 window.location.href = "product?action=delete&id=" + id;
             }
         })
+    }
+    const priceInput = document.getElementById('add_price');
+
+    if (priceInput) {
+        priceInput.addEventListener('input', function (e) {
+            // 1. Lưu lại vị trí con trỏ để không bị nhảy về cuối khi đang xóa
+            let cursorPosition = this.selectionStart;
+            let originalLength = this.value.length;
+
+            // 2. Chỉ lấy số thuần túy
+            let rawValue = this.value.replace(/[^0-9]/g, '');
+
+            if (rawValue === "") {
+                this.value = "";
+                return;
+            }
+
+            // 3. Định dạng số
+            let formattedValue = new Intl.NumberFormat('vi-VN').format(parseInt(rawValue));
+            this.value = formattedValue;
+
+            // 4. Tính toán lại vị trí con trỏ về trải nghiệm xóa/sửa
+            let newLength = this.value.length;
+            cursorPosition = cursorPosition + (newLength - originalLength);
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        });
+
+        // Chặn nhập chữ ngay từ đầu
+        priceInput.addEventListener('keydown', function(e) {
+            if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+                if (e.ctrlKey || e.metaKey) return; // Cho phép Ctrl+C, Ctrl+V
+                e.preventDefault();
+            }
+        });
     }
 </script>

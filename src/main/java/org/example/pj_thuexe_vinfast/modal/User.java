@@ -11,7 +11,8 @@ public class User {
     private int status;
     private String createdAt;
 
-    public User(){}
+    public User() {
+    }
 
     //constructor lay day du cac truong cua user
     public User(int id, String fullname, String password, String email, String phone, String address, int role, int status, String createdAt) {
@@ -30,7 +31,7 @@ public class User {
     public User(int id, String fullname, String email, int role) {
         this.id = id;
         this.fullname = fullname;
-        this.email =email;
+        this.email = email;
         this.role = role;
     }
 

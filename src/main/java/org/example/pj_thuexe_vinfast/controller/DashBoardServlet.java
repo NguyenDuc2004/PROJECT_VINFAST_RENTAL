@@ -12,6 +12,7 @@ import java.io.IOException;
 @WebServlet(name = "DashBoardServlet", value = "/dashboard")
 public class DashBoardServlet extends HttpServlet {
     UserService userService = new UserService();
+
     @Override
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -19,7 +20,7 @@ public class DashBoardServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
-        req.setAttribute("view","dashboard");
+        req.setAttribute("view", "dashboard");
         req.getRequestDispatcher("/admin/layout.jsp").forward(req, resp);
     }
 }
