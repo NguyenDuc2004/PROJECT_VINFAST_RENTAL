@@ -35,14 +35,40 @@ public class User {
         this.role = role;
     }
 
+    public User(int id, String fullname, String email, String phone, String address, int role, int status, String createdAt) {
+        this.id = id;
+        this.fullname = fullname;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
+        this.status = status;
+        this.createdAt = createdAt;
+    }
+
+    //constructor update
+    public User(int id, String fullname, String email, String phone, String address, int role, int status) {
+        this.id = id;
+        this.fullname = fullname;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
+        this.status = status;
+    }
+
     // Hàm kiểm tra quyền Admin
     public boolean isAdmin() {
-        return this.role == 1;
+        return this.role == 1 || this.role == 2;
     }
 
     // Hàm kiểm tra tài khoản có đang bị khóa không
     public boolean isActive() {
         return this.status == 1;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setId(int id) {

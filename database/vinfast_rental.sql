@@ -217,3 +217,14 @@ INSERT INTO users (fullname, email, password, role) VALUES
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2026-04-11  5:01:49
+
+CREATE TABLE orders (
+                        id INT PRIMARY KEY AUTO_INCREMENT,
+                        user_id INT, -- Liên kết với bảng User của bạn
+                        customer_name VARCHAR(255) NOT NULL,
+                        car_model VARCHAR(100), -- Ví dụ: VinFast Fadil, Lux A2.0
+                        total_price DECIMAL(15, 2), -- Đơn vị VNĐ
+                        status INT DEFAULT 0, -- 0: Chờ duyệt, 1: Đã thuê, 2: Đã trả, 3: Hủy
+                        order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (user_id) REFERENCES users(id) -- Giả định bảng user của bạn là 'users'
+);

@@ -8,12 +8,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ thống Quản trị | Admin VF-RENTAL</title>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-style.css">
 </head>
 <body>
@@ -75,10 +73,28 @@
             <c:when test="${view == 'dashboard'}">
                 <jsp:include page="view/dashboard.jsp"/>
             </c:when>
+<%--chuc nang cho user--%>
+            <c:when test="${view == 'users'}">
+                <jsp:include page="view/user/user-list.jsp" />
+            </c:when>
+            <c:when test="${view == 'view'}">
+                <jsp:include page="view/user/user-detail.jsp" />
+            </c:when>
+            <c:when test="${view == 'edit'}">
+                <jsp:include page="view/user/user-edit.jsp" />
+            </c:when>
+<%--chuc nang cho san pham--%>
+<%-- chuc nang cho don hang--%>
+
+
+            <c:when test="${view == 'orders'}">
+                <jsp:include page="view/order.jsp" />
+            </c:when>
 
             <c:otherwise>
                 <jsp:include page="view/dashboard.jsp"/>
             </c:otherwise>
+
         </c:choose>
     </main>
 
