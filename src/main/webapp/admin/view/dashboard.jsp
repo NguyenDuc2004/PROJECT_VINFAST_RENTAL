@@ -17,7 +17,7 @@
           </div>
           <div>
             <p class="text-muted mb-0 small fw-bold text-uppercase">Người dùng</p>
-            <h3 class="mb-0 fw-bold text-dark">0</h3>
+            <h3 class="mb-0 fw-bold text-dark">${TotalUser}</h3>
           </div>
         </div>
         <div class="mt-3 small">

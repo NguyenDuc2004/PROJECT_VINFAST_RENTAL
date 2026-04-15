@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet {
 
             if (user.isAdmin()) {
                 // Dùng session để lưu thông báo vì redirect sẽ làm mất request
-                session.setAttribute("toastMsg", "Chào mừng Admin " + user.getFullname());
+                session.setAttribute("toastMsg", "Chào mừng " + user.getFullname());
                 session.setAttribute("toastType", "success");
                 resp.sendRedirect(req.getContextPath() + "/dashboard");
             } else {
