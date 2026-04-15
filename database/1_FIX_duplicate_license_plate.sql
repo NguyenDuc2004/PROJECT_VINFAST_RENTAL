@@ -1,0 +1,1 @@
+DELETE FROM cars WHERE license_plate = '' OR license_plate IS NULL;

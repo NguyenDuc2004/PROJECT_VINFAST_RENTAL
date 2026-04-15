@@ -18,7 +18,7 @@
 
 <%-- CHỐT CHẶN BẢO MẬT (Giống PrivateRoute trong React) --%>
 <c:if test="${empty sessionScope.currUser}">
-    <c:redirect url="/login" />
+    <c:redirect url="/login"/>
 </c:if>
 
 <%-- CHỈ DÙNG 1 KHỐI DUY NHẤT ĐỂ TRÁNH XUNG ĐỘT ID --%>
@@ -43,22 +43,35 @@
         </div>
     </div>
     <%-- QUAN TRỌNG: Hiển thị xong phải xóa ngay để F5 không bị hiện lại --%>
-    <c:remove var="toastMsg" scope="session" />
-    <c:remove var="toastType" scope="session" />
+    <c:remove var="toastMsg" scope="session"/>
+    <c:remove var="toastType" scope="session"/>
 </c:if>
-<jsp:include page="include/sidebar.jsp" />
+<jsp:include page="include/sidebar.jsp"/>
 
 <div class="main-wrapper" id="content">
 
-    <jsp:include page="include/header.jsp" />
+    <jsp:include page="include/header.jsp"/>
 
     <main class="content-body">
         <c:choose>
-            <%-- Dùng requestScope.view (được gửi từ Servlet) để điều hướng --%>
-            <%--            user--%>
+            <%-- 1. Trang danh sách (Khi view == 'products') --%>
+            <c:when test="${view == 'products'}">
+                <jsp:include page="view/car/car.list.jsp"/>
+            </c:when>
 
+            <%-- 2. Trang chi tiết (Khi view == 'view') --%>
+            <c:when test="${view == 'view'}">
+                <jsp:include page="view/car/car-detail.jsp"/>
+            </c:when>
+
+            <%-- 3. Trang sửa (Khi view == 'edit') --%>
+            <c:when test="${view == 'edit'}">
+                <jsp:include page="view/car/car-edit.jsp"/>
+            </c:when>
+
+            <%-- 4. Trang Dashboard --%>
             <c:when test="${view == 'dashboard'}">
-                <jsp:include page="view/dashboard.jsp" />
+                <jsp:include page="view/dashboard.jsp"/>
             </c:when>
 <%--chuc nang cho user--%>
             <c:when test="${view == 'users'}">
@@ -78,15 +91,14 @@
                 <jsp:include page="view/order.jsp" />
             </c:when>
 
-            <%-- Mặc định hiện Dashboard --%>
             <c:otherwise>
-                <jsp:include page="view/dashboard.jsp" />
+                <jsp:include page="view/dashboard.jsp"/>
             </c:otherwise>
 
         </c:choose>
     </main>
 
-    <jsp:include page="include/footer.jsp" />
+    <jsp:include page="include/footer.jsp"/>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -163,7 +175,7 @@
         handleResize();
     });
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const toast = document.getElementById('auto-close-alert');
 
         if (toast) {
@@ -178,7 +190,7 @@
             }, 100);
 
             // 2. Tự động đóng sau 3 giây (3000ms)
-            setTimeout(function() {
+            setTimeout(function () {
                 // Hiệu ứng lướt ra
                 toast.style.opacity = "0";
                 toast.style.transform = "translateX(20px)";
