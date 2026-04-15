@@ -11,9 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-style.css">
 </head>
 <body>
@@ -76,10 +74,15 @@
 <%-- chuc nang cho don hang--%>
 
 
+            <c:when test="${view == 'orders'}">
+                <jsp:include page="view/order.jsp" />
+            </c:when>
+
             <%-- Mặc định hiện Dashboard --%>
             <c:otherwise>
                 <jsp:include page="view/dashboard.jsp" />
             </c:otherwise>
+
         </c:choose>
     </main>
 
