@@ -19,6 +19,8 @@
                 <c:when test="${view == 'edit-car'}">Cập nhật thông tin</c:when>
 <%--                đơn hàng--%>
                 <c:when test="${view == 'orders'}">Quản lý đơn hàng</c:when>
+                <c:when test="${view == 'orders-view'}">Chi tiết đơn hàng</c:when>
+                <c:when test="${view == 'orders-edit'}">Cập nhật đơn hàng</c:when>
 <%--                lịch sử đăng nhập--%>
                 <c:when test="${view == 'history'}">Nhật ký hệ thống</c:when>
                 <c:otherwise>Tổng quan Dashboard</c:otherwise>
