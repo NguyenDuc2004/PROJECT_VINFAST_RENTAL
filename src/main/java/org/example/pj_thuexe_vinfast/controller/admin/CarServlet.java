@@ -1,4 +1,4 @@
-package org.example.pj_thuexe_vinfast.controller;
+package org.example.pj_thuexe_vinfast.controller.admin;
 
 import org.example.pj_thuexe_vinfast.modal.Car;
 import org.example.pj_thuexe_vinfast.service.CarService;
@@ -28,7 +28,7 @@ public class CarServlet extends HttpServlet {
             }
 
             // 2. XỬ LÝ XEM CHI TIẾT HOẶC DI CHUYỂN ĐẾN TRANG SỬA
-            if ("view".equals(action) || "edit".equals(action)) {
+            if ("view-car".equals(action) || "edit-car".equals(action)) {
                 // Lấy ID và check null/rỗng trước khi parse
                 String idRaw = req.getParameter("id");
                 if (idRaw != null && !idRaw.isEmpty()) {

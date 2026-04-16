@@ -248,7 +248,7 @@
 
                 <div class="action-group">
                     <c:if test="${sessionScope.currUser.role == 1}">
-                        <a href="${pageContext.request.contextPath}/product?action=edit&id=${car.id}"
+                        <a href="${pageContext.request.contextPath}/product?action=edit-car&id=${car.id}"
                            class="btn-custom btn-main shadow-sm">
                             <i class="bi bi-pencil-square me-2"></i> CHỈNH SỬA
                         </a>

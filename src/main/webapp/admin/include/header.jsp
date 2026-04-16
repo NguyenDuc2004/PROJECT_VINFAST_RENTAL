@@ -15,6 +15,8 @@
                 <c:when test="${view == 'edit'}">Cập nhật thông tin</c:when>
 <%--                sản phẩm--%>
                 <c:when test="${view == 'products'}">Danh sách sản phẩm</c:when>
+                <c:when test="${view == 'view-car'}">Thông tin xe</c:when>
+                <c:when test="${view == 'edit-car'}">Cập nhật thông tin</c:when>
 <%--                đơn hàng--%>
                 <c:when test="${view == 'orders'}">Quản lý đơn hàng</c:when>
 <%--                lịch sử đăng nhập--%>

@@ -1,4 +1,4 @@
-package org.example.pj_thuexe_vinfast.controller;
+package org.example.pj_thuexe_vinfast.controller.admin;
 
 import org.example.pj_thuexe_vinfast.service.UserService;
 

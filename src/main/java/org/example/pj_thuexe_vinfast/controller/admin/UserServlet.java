@@ -1,4 +1,4 @@
-package org.example.pj_thuexe_vinfast.controller;
+package org.example.pj_thuexe_vinfast.controller.admin;
 
 
 import org.example.pj_thuexe_vinfast.modal.User;
@@ -120,7 +120,7 @@ public class UserServlet extends HttpServlet {
             User userEdit = userService.getDetailUser(id);
 
             req.setAttribute("user", userEdit);
-            req.setAttribute("view", "edit");
+            req.setAttribute("view", "edit-user");
             req.getRequestDispatcher("admin/layout.jsp").forward(req, resp);
 
         } catch (Exception e) {
@@ -166,7 +166,7 @@ public class UserServlet extends HttpServlet {
             int id = Integer.parseInt(idParam);
             User user = userService.getDetailUser(id);
             req.setAttribute("user", user);
-            req.setAttribute("view", "view");
+            req.setAttribute("view", "view-user");
             req.getRequestDispatcher("admin/layout.jsp").forward(req, resp);
         } catch (NumberFormatException e) {
             HttpSession session = req.getSession();

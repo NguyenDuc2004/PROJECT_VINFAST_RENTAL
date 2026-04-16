@@ -114,12 +114,12 @@
 
                         <td class="text-end pe-4">
                             <div class="btn-group">
-                                <a href="${pageContext.request.contextPath}/product?action=view&id=${p.id}"
+                                <a href="${pageContext.request.contextPath}/product?action=view-car&id=${p.id}"
                                    class="btn btn-sm btn-light border">
                                     <i class="bi bi-eye text-success"></i>
                                 </a>
                                 <c:if test="${sessionScope.currUser.role == 1}">
-                                    <a href="${pageContext.request.contextPath}/product?action=edit&id=${p.id}"
+                                    <a href="${pageContext.request.contextPath}/product?action=edit-car&id=${p.id}"
                                        class="btn btn-sm btn-light border">
                                         <i class="bi bi-pencil-square text-primary"></i>
                                     </a>
