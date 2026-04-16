@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("toastType", "success");
                 resp.sendRedirect(req.getContextPath() + "/dashboard");
             } else {
-                resp.sendRedirect(req.getContextPath() + "/index.jsp");
+                resp.sendRedirect(req.getContextPath() + "client/layout.jsp");
             }
         } else {
             req.setAttribute("toastMsg", "Tài khoản hoặc mật khẩu không chính xác!");

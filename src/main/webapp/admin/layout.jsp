@@ -63,10 +63,10 @@
             <c:when test="${view == 'products'}">
                 <jsp:include page="view/car/car.list.jsp"/>
             </c:when>
-            <c:when test="${view == 'car-view'}"> <%-- Đổi tên để không trùng --%>
+            <c:when test="${view == 'view-car'}"> <%-- Đổi tên để không trùng --%>
                 <jsp:include page="view/car/car-detail.jsp"/>
             </c:when>
-            <c:when test="${view == 'car-edit'}"> <%-- Đổi tên để không trùng --%>
+            <c:when test="${view == 'edit-car'}"> <%-- Đổi tên để không trùng --%>
                 <jsp:include page="view/car/car-edit.jsp"/>
             </c:when>
 
@@ -74,10 +74,10 @@
             <c:when test="${view == 'users'}">
                 <jsp:include page="view/user/user-list.jsp" />
             </c:when>
-            <c:when test="${view == 'user-view'}">
+            <c:when test="${view == 'view-user'}">
                 <jsp:include page="view/user/user-detail.jsp" />
             </c:when>
-            <c:when test="${view == 'user-edit'}">
+            <c:when test="${view == 'edit-user'}">
                 <jsp:include page="view/user/user-edit.jsp" />
             </c:when>
 
