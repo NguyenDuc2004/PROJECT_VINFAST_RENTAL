@@ -54,47 +54,51 @@
 
     <main class="content-body">
         <c:choose>
-            <%-- 1. Trang danh sách (Khi view == 'products') --%>
-            <c:when test="${view == 'products'}">
-                <jsp:include page="view/car/car.list.jsp"/>
-            </c:when>
-
-            <%-- 2. Trang chi tiết (Khi view == 'view') --%>
-            <c:when test="${view == 'view'}">
-                <jsp:include page="view/car/car-detail.jsp"/>
-            </c:when>
-
-            <%-- 3. Trang sửa (Khi view == 'edit') --%>
-            <c:when test="${view == 'edit'}">
-                <jsp:include page="view/car/car-edit.jsp"/>
-            </c:when>
-
-            <%-- 4. Trang Dashboard --%>
+            <%-- TRANG DASHBOARD --%>
             <c:when test="${view == 'dashboard'}">
                 <jsp:include page="view/dashboard.jsp"/>
             </c:when>
-<%--chuc nang cho user--%>
+
+            <%-- CHỨC NĂNG XE (CAR) --%>
+            <c:when test="${view == 'products'}">
+                <jsp:include page="view/car/car.list.jsp"/>
+            </c:when>
+            <c:when test="${view == 'car-view'}"> <%-- Đổi tên để không trùng --%>
+                <jsp:include page="view/car/car-detail.jsp"/>
+            </c:when>
+            <c:when test="${view == 'car-edit'}"> <%-- Đổi tên để không trùng --%>
+                <jsp:include page="view/car/car-edit.jsp"/>
+            </c:when>
+
+            <%-- CHỨC NĂNG NGƯỜI DÙNG (USER) --%>
             <c:when test="${view == 'users'}">
                 <jsp:include page="view/user/user-list.jsp" />
             </c:when>
-            <c:when test="${view == 'view'}">
+            <c:when test="${view == 'user-view'}">
                 <jsp:include page="view/user/user-detail.jsp" />
             </c:when>
-            <c:when test="${view == 'edit'}">
+            <c:when test="${view == 'user-edit'}">
                 <jsp:include page="view/user/user-edit.jsp" />
             </c:when>
-<%--chuc nang cho san pham--%>
-<%-- chuc nang cho don hang--%>
 
-
+            <%-- CHỨC NĂNG ĐƠN HÀNG (ORDERS) --%>
             <c:when test="${view == 'orders'}">
-                <jsp:include page="view/order.jsp" />
+                <jsp:include page="view/orders/order.jsp" />
+            </c:when>
+            <c:when test="${view == 'order-view'}"> <%-- Thêm dòng này --%>
+                <jsp:include page="view/orders/order-detail.jsp" />
+            </c:when>
+            <c:when test="${view == 'order-edit'}"> <%-- Thêm dòng này --%>
+                <jsp:include page="view/orders/order-edit.jsp" />
+            </c:when>
+            <c:when test="${view == 'order-add'}">
+                <jsp:include page="view/orders/order-add.jsp" />
             </c:when>
 
+            <%-- MẶC ĐỊNH --%>
             <c:otherwise>
                 <jsp:include page="view/dashboard.jsp"/>
             </c:otherwise>
-
         </c:choose>
     </main>
 

@@ -21,12 +21,21 @@ public class OrderService {
         return orderDAO.getOrderById(id);
     }
 
-    public boolean updateOrderStatus(int id, int status) {
+    public boolean updateStatus(int id, int status) {
         return orderDAO.updateStatus(id, status);
     }
 
     public boolean deleteOrder(int id) {
-        return orderDAO.deleteOrder(id);
+        Order order = orderDAO.getOrderById(id);
+        // Logic: Chỉ cho phép xóa nếu đơn hàng đang ở trạng thái "Chờ duyệt" (0) hoặc "Đã hủy"
+        if (order != null && (order.getStatus() == 0 || order.getStatus() == 3)) {
+            return orderDAO.deleteOrder(id);
+        }
+        return false; // Không cho xóa nếu xe đang được thuê (tránh mất dữ liệu quan trọng)
+    }
+
+    public void addOrder(Order order) {
+        orderDAO.insertOrder(order);
     }
 }
 
