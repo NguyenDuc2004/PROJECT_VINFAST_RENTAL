@@ -59,13 +59,13 @@
                 <jsp:include page="view/car/car.list.jsp"/>
             </c:when>
 
-            <%-- 2. Trang chi tiết (Khi view == 'view') --%>
-            <c:when test="${view == 'view'}">
+            <%-- 2. Trang chi tiết (Khi view == 'view-car') --%>
+            <c:when test="${view == 'view-car'}">
                 <jsp:include page="view/car/car-detail.jsp"/>
             </c:when>
 
             <%-- 3. Trang sửa (Khi view == 'edit') --%>
-            <c:when test="${view == 'edit'}">
+            <c:when test="${view == 'edit-car'}">
                 <jsp:include page="view/car/car-edit.jsp"/>
             </c:when>
 
@@ -77,10 +77,10 @@
             <c:when test="${view == 'users'}">
                 <jsp:include page="view/user/user-list.jsp" />
             </c:when>
-            <c:when test="${view == 'view'}">
+            <c:when test="${view == 'view-user'}">
                 <jsp:include page="view/user/user-detail.jsp" />
             </c:when>
-            <c:when test="${view == 'edit'}">
+            <c:when test="${view == 'edit-user'}">
                 <jsp:include page="view/user/user-edit.jsp" />
             </c:when>
 <%--chuc nang cho san pham--%>
