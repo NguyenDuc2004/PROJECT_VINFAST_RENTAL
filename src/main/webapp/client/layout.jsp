@@ -10,9 +10,19 @@
 <body>
 <jsp:include page="include/navbar.jsp" />
 
-<c:if test="${not empty view}">
-    <jsp:include page="${view}" />
-</c:if>
+<main>
+    <c:choose>
+        <c:when test="${view == 'home'}">
+            <jsp:include page="view/home.jsp"/>
+        </c:when>
+        <c:when test="${view == 'cars'}">
+            <jsp:include page="view/car-list.jsp"/>
+        </c:when>
+        <c:otherwise>
+            <jsp:include page="view/home.jsp"/>
+        </c:otherwise>
+    </c:choose>
+</main>
 
 <jsp:include page="include/footer.jsp" />
 </body>

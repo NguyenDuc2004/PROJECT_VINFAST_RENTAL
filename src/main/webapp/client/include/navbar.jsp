@@ -13,9 +13,20 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/home?page=cars">Danh sách xe</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Về chúng tôi</a></li>
+                <li class="nav-item">
+                    <a class="nav-link ${view == 'home' || empty view ? 'active' : ''}"
+                       href="${pageContext.request.contextPath}/home">Trang chủ</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link ${view == 'cars' ? 'active' : ''}"
+                       href="${pageContext.request.contextPath}/home?page=cars">Danh sách xe</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link ${view == 'about' ? 'active' : ''}"
+                       href="${pageContext.request.contextPath}/home?page=about">Về chúng tôi</a>
+                </li>
             </ul>
 
             <div class="d-flex align-items-center">
@@ -30,7 +41,7 @@
                                 <i class="bi bi-person-circle me-2"></i>Chào, ${sessionScope.currUser.fullname}
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                                <c:if test="${sessionScope.currUser.role == 1}">
+                                <c:if test="${sessionScope.currUser.role == 1 ||sessionScope.currUser.role == 2 }">
                                     <li><a class="dropdown-item text-danger fw-bold" href="${pageContext.request.contextPath}/dashboard">
                                         <i class="bi bi-speedometer2 me-2"></i>Quản trị hệ thống
                                     </a></li>
