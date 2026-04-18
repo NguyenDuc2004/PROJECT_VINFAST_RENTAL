@@ -16,7 +16,10 @@
             <jsp:include page="view/home.jsp"/>
         </c:when>
         <c:when test="${view == 'cars'}">
-            <jsp:include page="view/car-list.jsp"/>
+            <jsp:include page="view/car/car-list.jsp"/>
+        </c:when>
+        <c:when test="${view == 'car-detail'}">
+            <jsp:include page="view/car/car-detail.jsp"/>
         </c:when>
         <c:otherwise>
             <jsp:include page="view/home.jsp"/>

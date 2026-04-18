@@ -9,7 +9,7 @@
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h3 mb-0 text-gray-800 text-uppercase fw-bold">Quản lý sản phẩm</h2>
-        <c:if test="${sessionScope.currUser.role == 1}">
+        <c:if test="${sessionScope.currUser.role == 1 || sessionScope.currUser.role == 2}">
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
                 <i class="bi bi-plus-circle"></i> Thêm sản phẩm
             </button>
@@ -118,7 +118,7 @@
                                    class="btn btn-sm btn-light border">
                                     <i class="bi bi-eye text-success"></i>
                                 </a>
-                                <c:if test="${sessionScope.currUser.role == 1}">
+                                <c:if test="${sessionScope.currUser.role == 1 || sessionScope.currUser.role == 2}">
                                     <a href="${pageContext.request.contextPath}/product?action=edit-car&id=${p.id}"
                                        class="btn btn-sm btn-light border">
                                         <i class="bi bi-pencil-square text-primary"></i>

@@ -30,24 +30,39 @@
             </ul>
 
             <div class="d-flex align-items-center">
+                <%-- 1. ICON GIỎ HÀNG (Cần đăng nhập mới xem được chi tiết giỏ hàng) --%>
+                <a href="${empty sessionScope.currUser ? pageContext.request.contextPath.concat('/login') : pageContext.request.contextPath.concat('/cart')}"
+                   class="position-relative me-4 text-white decoration-none">
+                    <i class="bi bi-cart3 fs-4"></i>
+                    <c:if test="${not empty sessionScope.currUser}">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                            0 <%-- Số lượng xe trong giỏ --%>
+                        </span>
+                    </c:if>
+                </a>
+
                 <c:choose>
+                    <%-- TRƯỜNG HỢP CHƯA ĐĂNG NHẬP --%>
                     <c:when test="${empty sessionScope.currUser}">
                         <a href="${pageContext.request.contextPath}/login" class="btn btn-outline-light me-2 rounded-pill px-4">Đăng nhập</a>
                         <a href="#" class="btn btn-primary rounded-pill px-4">Đăng ký</a>
                     </c:when>
+
+                    <%-- TRƯỜNG HỢP ĐÃ ĐĂNG NHẬP --%>
                     <c:otherwise>
                         <div class="dropdown">
                             <button class="btn btn-light dropdown-toggle rounded-pill px-3" type="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-person-circle me-2"></i>Chào, ${sessionScope.currUser.fullname}
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                                <c:if test="${sessionScope.currUser.role == 1 ||sessionScope.currUser.role == 2 }">
+                                <c:if test="${sessionScope.currUser.role == 1 || sessionScope.currUser.role == 2}">
                                     <li><a class="dropdown-item text-danger fw-bold" href="${pageContext.request.contextPath}/dashboard">
                                         <i class="bi bi-speedometer2 me-2"></i>Quản trị hệ thống
                                     </a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 </c:if>
                                 <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Cá nhân</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/cart"><i class="bi bi-cart-check me-2"></i>Giỏ hàng của tôi</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i>Lịch sử thuê</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/login?action=logout"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</a></li>
