@@ -202,7 +202,10 @@
                                     <div class="car-img-box">
                                         <div class="position-absolute top-0 start-0 p-3" style="z-index: 2;">
                                             <span class="badge bg-white text-dark shadow-sm rounded-pill fw-800 py-2 px-3" style="font-size: 0.65rem;">
-                                                <i class="bi bi-check-circle-fill text-success me-1"></i> SẴN SÀNG
+                                                <i class="bi ${car.status == 'AVAILABLE' ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'} me-1"></i>
+                                                <span class="${car.status == 'AVAILABLE' ? 'text-success' : 'text-secondary'}">
+                                                     ${car.status == "AVAILABLE" ? "SẴN SÀNG" : "HẾT XE"}
+                                                </span>
                                             </span>
                                         </div>
                                         <img src="${not empty car.imageUrl ? car.imageUrl : 'https://via.placeholder.com/400x300?text=VinFast'}"

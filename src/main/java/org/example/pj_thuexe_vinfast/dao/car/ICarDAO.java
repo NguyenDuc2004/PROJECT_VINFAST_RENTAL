@@ -18,6 +18,6 @@ public interface ICarDAO {
 
     boolean update(Car car);
 
-
+    public boolean updateStatus(int carId, String status);
 
 }

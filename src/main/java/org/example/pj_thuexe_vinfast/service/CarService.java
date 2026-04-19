@@ -44,7 +44,7 @@ public class CarService {
         }
 
         // 3. Check trạng thái
-        if ("UNAVAILABLE".equals(car.getStatus())) {
+        if ("DELETED".equals(car.getStatus())) {
             throw new Exception("Xe này đã được xóa trước đó rồi!");
         }
 
@@ -80,5 +80,9 @@ public class CarService {
         if (!success) {
             throw new Exception("Lỗi hệ thống khi cập nhật!");
         }
+    }
+
+    public boolean updateCarStatus(int carId, String status) {
+        return carDAO.updateStatus(carId, status);
     }
 }

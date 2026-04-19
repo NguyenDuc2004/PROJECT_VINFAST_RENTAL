@@ -32,6 +32,7 @@
                         <option value="">-- Tất cả --</option>
                         <option value="AVAILABLE" ${param.status == 'AVAILABLE' ? 'selected' : ''}>Còn hàng</option>
                         <option value="UNAVAILABLE" ${param.status == 'UNAVAILABLE' ? 'selected' : ''}>Hết hàng</option>
+                        <option value="DELETED" ${param.status == 'DELETED' ? 'selected' : ''}>Xóa mềm</option>
                     </select>
                 </div>
 
@@ -114,8 +115,11 @@
                                 <c:when test="${p.status == 'AVAILABLE'}">
                                     <span class="badge bg-light text-success border border-success">Còn hàng</span>
                                 </c:when>
-                                <c:otherwise>
+                                <c:when test="${p.status == 'UNAVAILABLE'}">
                                     <span class="badge bg-light text-danger border border-danger">Hết hàng</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="badge bg-light text-danger border border-danger">Xóa mềm</span>
                                 </c:otherwise>
                             </c:choose>
                         </td>

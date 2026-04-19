@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
-    :root { --vf-blue: #0062ff; --text-main: #0f172a; }
+    :root { --vf-blue: #0062ff; --text-main: #0f172a; --bg-gray: #f8fafc; }
     html { scroll-behavior: smooth; }
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; margin: 0; }
 
@@ -47,12 +47,12 @@
     .btn-banner-scroll:hover { transform: translateY(-5px); background: var(--vf-blue); color: #fff; }
 
     /* 2. ADS SECTION (SIÊU PHẨM CÔNG NGHỆ) */
-    .ads-section { padding: 100px 0 60px 0; background: #f8fafc; }
+    .ads-section { padding: 100px 0 60px 0; background: var(--bg-gray); }
 
     .ads-card {
         background: #000000; border-radius: 40px; padding: 45px;
         color: #ffffff; text-decoration: none !important;
-        display: flex; flex-direction: column; height: 550px; /* Thu gọn chiều cao vì không có nút */
+        display: flex; flex-direction: column; height: 550px;
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         border: 1px solid rgba(255,255,255,0.05);
     }
@@ -77,34 +77,35 @@
     .spec-item { display: flex; align-items: center; gap: 10px; color: #94a3b8; font-size: 0.85rem; }
     .spec-item i { color: #fff; font-size: 1.1rem; }
 
-    /* 3. NÚT XEM CHI TIẾT NẰM NGOÀI BOX (DƯỚI SLIDER) */
-    .view-more-container {
-        text-align: center;
-        background: #f8fafc; /* Phải cùng màu nền với ads-section */
-        padding-bottom: 80px;
-    }
-
+    .view-more-container { text-align: center; background: var(--bg-gray); padding-bottom: 80px; }
     .btn-view-all {
-        display: inline-block;
-        padding: 14px 50px;
-        border: 1.5px solid #000;
-        border-radius: 50px;
-        color: #000;
-        text-decoration: none;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        transition: 0.3s;
+        display: inline-block; padding: 14px 50px; border: 1.5px solid #000; border-radius: 50px;
+        color: #000; text-decoration: none; font-weight: 700; text-transform: uppercase;
+        font-size: 0.9rem; transition: 0.3s;
     }
-
-    .btn-view-all:hover {
-        background: #000;
-        color: #fff;
-        transform: scale(1.05);
-    }
+    .btn-view-all:hover { background: #000; color: #fff; transform: scale(1.05); }
 
     .slider-item { outline: none; padding: 40px 15px; }
     .slick-prev:before, .slick-next:before { color: #000; font-size: 30px; }
+
+    /* 3. LỢI ÍCH DỊCH VỤ (THEO MẪU) */
+    .benefits-section { padding: 80px 0; background: #fff; }
+    .benefit-item { display: flex; gap: 20px; margin-bottom: 40px; }
+    .benefit-icon {
+        width: 60px; height: 60px; border-radius: 15px; background: var(--bg-gray);
+        display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--vf-blue);
+    }
+    .benefit-content h4 { font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+    .benefit-content p { color: #64748b; font-size: 0.9rem; line-height: 1.6; }
+
+    /* 4. QUY TRÌNH ĐẶT XE */
+    .steps-section { padding: 80px 0; background: var(--bg-gray); text-align: center; }
+    .step-box { background: #fff; border-radius: 50%; width: 250px; height: 250px; margin: 0 auto 25px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        border: 1px solid #e2e8f0; transition: 0.3s; }
+    .step-box:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); border-color: var(--vf-blue); }
+    .step-box i { font-size: 3rem; color: var(--vf-blue); margin-bottom: 15px; }
+    .step-box span { font-weight: 800; text-transform: uppercase; color: var(--text-main); }
 </style>
 
 <div class="hero-banner">
@@ -151,7 +152,91 @@
     </div>
 </div>
 
+<div class="benefits-section">
+    <div class="container">
+        <div class="mb-5">
+            <h2 class="fw-800">Lợi ích của VinFast Rental</h2>
+            <div style="width: 50px; height: 4px; background: var(--vf-blue); border-radius: 10px;"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-car-front-fill"></i></div>
+                    <div class="benefit-content">
+                        <h4>Nhiều lựa chọn</h4>
+                        <p>Hàng trăm loại xe đa dạng ở nhiều địa điểm trên cả nước, phù hợp với mọi mục đích của bạn.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-cursor-fill"></i></div>
+                    <div class="benefit-content">
+                        <h4>Thuận tiện</h4>
+                        <p>Dễ dàng tìm kiếm, so sánh và đặt chiếc xe như ý với chỉ vài click chuột.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-tags-fill"></i></div>
+                    <div class="benefit-content">
+                        <h4>Giá cả cạnh tranh</h4>
+                        <p>Giá thuê được niêm yết công khai và rẻ hơn tới 10% so với giá truyền thống.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-shield-lock-fill"></i></div>
+                    <div class="benefit-content">
+                        <h4>Tin cậy</h4>
+                        <p>Các xe đều có thời gian sử dụng dưới 3 năm và được bảo dưỡng thường xuyên.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-headset"></i></div>
+                    <div class="benefit-content">
+                        <h4>Hỗ trợ 24/7</h4>
+                        <p>Có nhân viên hỗ trợ khách hàng trong suốt quá trình thuê xe và xử lý sự cố.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-patch-check-fill"></i></div>
+                    <div class="benefit-content">
+                        <h4>Bảo hiểm</h4>
+                        <p>An tâm với các gói bảo hiểm thuê xe tự lái trong suốt quá trình di chuyển.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="steps-section">
+    <div class="container">
+        <h2 class="fw-800 mb-5">Đặt xe như thế nào?</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="step-box">
+                    <i class="bi bi-laptop"></i>
+                    <span>Đặt xe</span>
+                </div>
+                <p class="mt-3 text-muted px-4">Tìm và đặt xe ngay trên hệ thống website hoặc app của chúng tôi.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="step-box">
+                    <i class="bi bi-key-fill"></i>
+                    <span>Nhận xe</span>
+                </div>
+                <p class="mt-3 text-muted px-4">Kiểm tra xe và ký biên bản bàn giao tại showroom hoặc tại nhà.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="step-box">
+                    <i class="bi bi-emoji-smile-fill"></i>
+                    <span>Tận hưởng</span>
+                </div>
+                <p class="mt-3 text-muted px-4">Khám phá hành trình và tận hưởng những giây phút tuyệt vời.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>

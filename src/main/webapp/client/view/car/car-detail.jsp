@@ -184,10 +184,19 @@
                 </div>
 
                 <div class="d-grid gap-3">
-                    <a href="${empty sessionScope.currUser ? pageContext.request.contextPath.concat('/login') : pageContext.request.contextPath.concat('/cart?action=add&carId=').concat(car.id)}"
-                       class="btn btn-rent-main shadow">
-                        ĐẶT THUÊ XE NGAY
-                    </a>
+                    <c:choose>
+                        <c:when test="${car.status == 'AVAILABLE'}">
+                            <a href="${empty sessionScope.currUser ? pageContext.request.contextPath.concat('/login') : pageContext.request.contextPath.concat('/cars?action=checkout&id=').concat(car.id)}"
+                               class="btn btn-rent-main shadow w-100">
+                                ĐẶT XE NGAY
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <button class="btn btn-secondary py-3 rounded-4 fw-bold w-100" disabled style="cursor: not-allowed; opacity: 0.6;">
+                                HẾT XE (ĐÃ ĐƯỢC ĐẶT)
+                            </button>
+                        </c:otherwise>
+                    </c:choose>
                     <a href="${pageContext.request.contextPath}/cars" class="btn btn-outline-dark py-3 rounded-4 fw-bold">
                         Quay lại danh sách
                     </a>

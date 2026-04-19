@@ -26,7 +26,7 @@ public class CarDAO implements ICarDAO {
         if (status != null && !status.isEmpty()) {
             sql.append(" AND status = ?");
         }
-        else sql.append(" AND c.status = 'AVAILABLE'");
+        else sql.append(" AND c.status IN ('AVAILABLE', 'UNAVAILABLE')");
         if (location != null && !location.isEmpty()) {
             sql.append(" AND location_id = ?");
         }
@@ -135,7 +135,7 @@ public class CarDAO implements ICarDAO {
 
     @Override
     public void delete(int id) {
-        String sql = "UPDATE cars SET status = 'UNAVAILABLE' WHERE id = ?";
+        String sql = "UPDATE cars SET status = 'DELETED' WHERE id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -170,6 +170,22 @@ public class CarDAO implements ICarDAO {
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Lỗi update: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateStatus(int carId, String status) {
+        String sql = "UPDATE cars SET status = ? WHERE id = ?";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, carId);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;

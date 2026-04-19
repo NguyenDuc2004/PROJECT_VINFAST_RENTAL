@@ -28,10 +28,18 @@ public class CarClientServlet extends HttpServlet {
             case "detail":
                 showDetail(req, resp);
                 break;
+            case "checkout":
+                showCheckout(req, resp);
+                break;
             default:
                 showList(req, resp);
                 break;
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 
     private void showList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -54,5 +62,28 @@ public class CarClientServlet extends HttpServlet {
         req.setAttribute("title", "Chi tiết xe");
         req.setAttribute("car", car);
         req.getRequestDispatcher("client/layout.jsp").forward(req, resp);
+    }
+
+    private void showCheckout(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getSession().getAttribute("currUser") == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(req.getParameter("id"));
+            Car car = carService.getCarById(id);
+
+            if (car != null) {
+                req.setAttribute("car", car);
+                req.setAttribute("view", "checkout");
+                req.setAttribute("title", "Xác nhận đặt xe");
+                req.getRequestDispatcher("client/layout.jsp").forward(req, resp);
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/cars");
+            }
+        } catch (NumberFormatException e) {
+            resp.sendRedirect(req.getContextPath() + "/cars");
+        }
     }
 }
