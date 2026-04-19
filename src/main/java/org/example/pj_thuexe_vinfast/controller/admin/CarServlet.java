@@ -1,6 +1,7 @@
 package org.example.pj_thuexe_vinfast.controller.admin;
 
 import org.example.pj_thuexe_vinfast.modal.Car;
+import org.example.pj_thuexe_vinfast.modal.Location;
 import org.example.pj_thuexe_vinfast.service.CarService;
 
 import javax.servlet.ServletException;
@@ -20,6 +21,10 @@ public class CarServlet extends HttpServlet {
         String action = req.getParameter("action");
         HttpSession session = req.getSession();
 
+        // Luôn lấy listLocations để dùng cho cả Filter và Modal
+        List<Location> listLocations = carService.getAllLocations();
+        req.setAttribute("listLocations", listLocations);
+
         try {
             if ("delete".equals(action)) {
                 deletedcar(req, resp, session);
@@ -31,6 +36,7 @@ public class CarServlet extends HttpServlet {
                 if (idRaw != null && !idRaw.isEmpty()) {
                     int id = Integer.parseInt(idRaw);
                     Car car = carService.getCarById(id);
+                    System.out.println(car.toString());
 
                     if (car != null) {
                         req.setAttribute("car", car);
@@ -48,7 +54,9 @@ public class CarServlet extends HttpServlet {
             String keyword = req.getParameter("keyword");
             String status = req.getParameter("status");
             String category = req.getParameter("category");
-            List<Car> list = carService.getAllCars(keyword, status, category);
+            String locationId = req.getParameter("locationId");
+
+            List<Car> list = carService.getAllCars(keyword, status, category, locationId);
 
             req.setAttribute("listProduct", list);
             req.setAttribute("view", "products");
@@ -101,8 +109,8 @@ public class CarServlet extends HttpServlet {
             Car c = mapRequestToCar(req);
             c.setId(id);
 
-            // Nếu người dùng không nhập biển số mới, giữ lại biển số cũ (nếu có)
-            if (c.getLicensePlate() == null) {
+            // Xử lý logic biển số trống cho update
+            if (c.getLicensePlate() == null || c.getLicensePlate().trim().isEmpty()) {
                 Car existingCar = carService.getCarById(id);
                 if (existingCar != null) {
                     c.setLicensePlate(existingCar.getLicensePlate());
@@ -136,28 +144,25 @@ public class CarServlet extends HttpServlet {
         Car c = new Car();
         c.setModelName(req.getParameter("name"));
 
-        // FIX: KHÔNG CÒN RANDOM BIỂN SỐ
         String plate = req.getParameter("licensePlate");
-        if (plate != null && !plate.trim().isEmpty()) {
-            c.setLicensePlate(plate.trim());
-        } else {
-            c.setLicensePlate("");
-        }
+        c.setLicensePlate(plate != null ? plate.trim() : "");
 
-        // XỬ LÝ GIÁ
         String priceStr = req.getParameter("price");
         if (priceStr != null) {
             String cleanPrice = priceStr.replaceAll("[^0-9]", "");
             c.setPricePerDay(cleanPrice.isEmpty() ? 0 : Double.parseDouble(cleanPrice));
         }
 
-        // DANH MỤC
         String catId = req.getParameter("categoryId");
         c.setCategoryId(catId != null ? Integer.parseInt(catId) : 1);
 
+        // FIX: ĐÃ XÓA DÒNG GÁN CỨNG ID = 1
+        String locId = req.getParameter("locationId");
+        c.setLocationId(locId != null ? Integer.parseInt(locId) : 1);
+
         c.setStatus(req.getParameter("status"));
         c.setImageUrl(req.getParameter("imageUrl"));
-        c.setLocationId(1);
+        c.setDescription(req.getParameter("description"));
 
         return c;
     }

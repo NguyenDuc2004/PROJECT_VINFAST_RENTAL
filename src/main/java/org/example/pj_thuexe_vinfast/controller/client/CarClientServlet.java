@@ -38,7 +38,7 @@ public class CarClientServlet extends HttpServlet {
         String category = req.getParameter("categoryId");
 
         // Client mặc định không truyền status thì hàm  tự lấy 'AVAILABLE'
-        List<Car> list = carService.getAllCars(keyword, null, category);
+        List<Car> list = carService.getAllCars(keyword, null, category,null);
 
         req.setAttribute("listCars", list);
         req.setAttribute("view", "cars");

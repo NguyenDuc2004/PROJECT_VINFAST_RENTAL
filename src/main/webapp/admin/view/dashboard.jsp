@@ -46,7 +46,8 @@
     </div>
 
     <div class="col-md-4">
-      <div class="card card-stat p-4 bg-white border-0 shadow-sm Ripple-effect" onclick="location.href='?view=products'">
+      <div class="card card-stat p-4 bg-white border-0 shadow-sm Ripple-effect"
+           onclick="location.href='${pageContext.request.contextPath}/product'">
         <div class="d-flex align-items-center">
           <div class="icon-box bg-warning-subtle text-warning me-3">
             <i class="bi bi-box-seam-fill"></i>

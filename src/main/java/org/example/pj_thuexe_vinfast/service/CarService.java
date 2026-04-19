@@ -3,14 +3,19 @@ package org.example.pj_thuexe_vinfast.service;
 import org.example.pj_thuexe_vinfast.dao.car.CarDAO;
 import org.example.pj_thuexe_vinfast.dao.car.ICarDAO;
 import org.example.pj_thuexe_vinfast.modal.Car;
+import org.example.pj_thuexe_vinfast.modal.Location;
 
 import java.util.List;
 
 public class CarService {
     private final ICarDAO carDAO = new CarDAO();
 
-    public List<Car> getAllCars(String keyword, String status, String category) {
-        return carDAO.filterSearchCars(keyword, status, category);
+    public List<Car> getAllCars(String keyword, String status, String category,String location) {
+        return carDAO.filterSearchCars(keyword, status, category,location);
+    }
+
+    public List<Location> getAllLocations() {
+        return carDAO.getLocation();
     }
 
     public void addProduct(Car car) throws Exception {

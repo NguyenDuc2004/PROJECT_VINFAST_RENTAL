@@ -44,17 +44,15 @@
                         <option value="3" ${param.category == '3' ? 'selected' : ''}>HATCHBACK</option>
                     </select>
                 </div>
-
-                <%-- Thêm lọc theo Địa điểm --%>
-<%--                <div class="col-md-3">--%>
-<%--                    <label class="form-label fw-bold small text-muted">Địa điểm</label>--%>
-<%--                    <select name="locationId" class="form-select bg-light">--%>
-<%--                        <option value="">-- Tất cả địa điểm --</option>--%>
-<%--                        <c:forEach items="${listLocations}" var="loc">--%>
-<%--                            <option value="${loc.id}" ${param.locationId == loc.id ? 'selected' : ''}>${loc.name}</option>--%>
-<%--                        </c:forEach>--%>
-<%--                    </select>--%>
-<%--                </div>--%>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold small text-muted">Địa điểm</label>
+                    <select name="locationId" class="form-select bg-light">
+                        <option value="">-- Tất cả --</option>
+                        <c:forEach items="${listLocations}" var="loc">
+                            <option value="${loc.id}" ${param.locationId == loc.id ? 'selected' : ''}>${loc.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
 
                 <div class="col-md-2 d-flex gap-2">
                     <button class="btn btn-primary flex-grow-1 fw-bold">

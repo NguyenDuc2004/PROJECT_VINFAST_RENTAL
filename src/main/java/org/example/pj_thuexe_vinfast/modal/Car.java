@@ -130,4 +130,21 @@ public class Car {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", categoryId=" + categoryId +
+                ", locationId=" + locationId +
+                ", modelName='" + modelName + '\'' +
+                ", licensePlate='" + licensePlate + '\'' +
+                ", pricePerDay=" + pricePerDay +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", status='" + status + '\'' +
+                ", description='" + description + '\'' +
+                ", categoryName='" + categoryName + '\'' +
+                ", locationName='" + locationName + '\'' +
+                '}';
+    }
 }
