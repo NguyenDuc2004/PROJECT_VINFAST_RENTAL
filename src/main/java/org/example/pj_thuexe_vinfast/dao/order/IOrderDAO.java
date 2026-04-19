@@ -13,4 +13,6 @@ public interface IOrderDAO {
     boolean deleteOrder(int id);     // Xóa đơn hàng
 
     void insertOrder(Order order);
+
+    List<Order> selectOrdersByUserId(int userId);
 }
