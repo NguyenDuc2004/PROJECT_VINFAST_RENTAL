@@ -5,8 +5,8 @@
 <div class="container-fluid px-4 py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold m-0">Quản lý đơn hàng đặt xe</h2>
-        <a href="admin-orders?action=add" class="btn btn-primary shadow-sm">
-            <i class="bi bi-plus-lg me-2"></i>Tạo đơn hàng mới
+        <a href="${pageContext.request.contextPath}/admin-orders?action=export" class="btn btn-success">
+            <i class="fas fa-file-excel"></i> Xuất file Excel
         </a>
     </div>
 

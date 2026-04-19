@@ -61,9 +61,15 @@
                                     </a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 </c:if>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Cá nhân</a></li>
+                                <li><a class="dropdown-item ${view == 'user-profile' ? 'active' : ''}"
+                                       href="${pageContext.request.contextPath}/home?page=profile">
+                                    <i class="bi bi-person me-2"></i>Cá nhân
+                                </a></li>
                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/cart"><i class="bi bi-cart-check me-2"></i>Giỏ hàng của tôi</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i>Lịch sử thuê</a></li>
+                                <li><a class="dropdown-item ${view == 'user-history' ? 'active' : ''}"
+                                       href="${pageContext.request.contextPath}/home?page=history">
+                                    <i class="bi bi-clock-history me-2"></i>Lịch sử thuê
+                                </a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/login?action=logout"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</a></li>
                             </ul>

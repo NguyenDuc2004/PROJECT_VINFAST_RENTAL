@@ -26,9 +26,8 @@ public class OrderController extends HttpServlet {
         if (action == null) action = "list";
 
         switch (action) {
-            case "add":
-                request.setAttribute("view", "order-add");
-                request.getRequestDispatcher("admin/layout.jsp").forward(request, response);
+            case "export": // Thêm trường hợp này
+                exportToExcel(request, response);
                 break;
             case "view":
                 showOrderDetail(request, response);
@@ -123,5 +122,22 @@ public class OrderController extends HttpServlet {
         orderService.addOrder(newOrder);
 
         response.sendRedirect("admin-orders");
+    }
+
+    private void exportToExcel(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        // 1. Cấu hình thông tin file trả về
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=danh_sach_don_hang.xlsx");
+
+        // 2. Lấy dữ liệu
+        List<Order> listOrder = orderService.getAllOrders();
+
+        // 3. Thực hiện xuất file ra OutputStream của Response
+        try {
+            orderService.exportOrdersToExcel(listOrder, response.getOutputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
