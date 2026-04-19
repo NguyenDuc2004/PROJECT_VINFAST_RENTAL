@@ -1,6 +1,7 @@
 package org.example.pj_thuexe_vinfast.dao.user;
 
 import org.example.pj_thuexe_vinfast.dbConnection.DbConnection;
+import org.example.pj_thuexe_vinfast.modal.Order;
 import org.example.pj_thuexe_vinfast.modal.User;
 
 import java.sql.Connection;
@@ -20,7 +21,6 @@ public class UserDAO implements IUserDAO {
     public static final String GET_USER_BY_ID = "SELECT *FROM users WHERE id = ?";
     public static final String UPDATE_USER = "UPDATE users SET fullname = ?,email = ?,phone = ?,address = ?,role= ?,status = ? WHERE id = ?;";
     public static final String INSERT_USER = "INSERT INTO users (fullname, email, password, phone, role, address) VALUES (?, ?, ?, ?, ?, ?)";
-
     @Override
     public User checkLogin(String email, String password) {
         try (Connection conn = DbConnection.getConnection();

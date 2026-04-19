@@ -49,6 +49,25 @@ public class OrderDAO implements IOrderDAO {
         return order;
     }
 
+    public List<Order> selectOrdersByUserId(int userId) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                orders.add(mapResultSetToOrder(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
     @Override
     public void insertOrder(Order order) {
         try (Connection conn = DbConnection.getConnection();
