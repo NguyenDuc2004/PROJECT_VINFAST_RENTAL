@@ -15,7 +15,4 @@ public interface ICarDAO {
 
     boolean update(Car car);
 
-
-
-
 }
