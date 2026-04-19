@@ -2,6 +2,7 @@ package org.example.pj_thuexe_vinfast.controller.client;
 
 import org.example.pj_thuexe_vinfast.dao.car.CarDAO; // Giả định tên DAO của bạn
 import org.example.pj_thuexe_vinfast.modal.Car;
+import org.example.pj_thuexe_vinfast.modal.Location;
 import org.example.pj_thuexe_vinfast.service.CarService;
 
 import javax.servlet.ServletException;
@@ -35,11 +36,12 @@ public class CarClientServlet extends HttpServlet {
 
     private void showList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String keyword = req.getParameter("keyword");
-        String category = req.getParameter("categoryId");
-
+        String category = req.getParameter("category");
+        String location = req.getParameter("locationId");
+        List<Location> listLocations = carService.getAllLocations();
         // Client mặc định không truyền status thì hàm  tự lấy 'AVAILABLE'
-        List<Car> list = carService.getAllCars(keyword, null, category,null);
-
+        List<Car> list = carService.getAllCars(keyword, null, category,location);
+        req.setAttribute("listLocations",listLocations);
         req.setAttribute("listCars", list);
         req.setAttribute("view", "cars");
         req.getRequestDispatcher("client/layout.jsp").forward(req, resp);
