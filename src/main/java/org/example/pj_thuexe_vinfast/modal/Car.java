@@ -11,6 +11,7 @@ public class Car {
     private String status;
     private String description;
     private String categoryName;
+    private String locationName;
 
     public Car(int id, int categoryId, int locationId, String modelName, String licensePlate, double pricePerDay, String imageUrl, String status, String description, String categoryName) {
         this.id = id;
@@ -27,6 +28,27 @@ public class Car {
 
     // Constructor mặc định
     public Car() {
+    }
+
+    public Car(int id, int categoryId, String locationName, String modelName, String licensePlate, double pricePerDay, String imageUrl, String status, String description, String categoryName) {
+        this.id = id;
+        this.categoryId = categoryId;
+        this.modelName = modelName;
+        this.licensePlate = licensePlate;
+        this.pricePerDay = pricePerDay;
+        this.imageUrl = imageUrl;
+        this.status = status;
+        this.description = description;
+        this.categoryName = categoryName;
+        this.locationName = locationName;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
     public String getCategoryName() {

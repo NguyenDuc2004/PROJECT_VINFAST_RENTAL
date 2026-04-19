@@ -214,7 +214,7 @@
                         Premium</h6>
                     <h1 class="display-title text-dark">${car.modelName}</h1>
                     <div class="d-flex align-items-center gap-3">
-                        <span class="badge bg-dark px-3 py-2 rounded-2 fs-6 font-monospace">30H - 259.99</span>
+                        <span class="badge bg-dark px-3 py-2 rounded-2 fs-6 font-monospace">${car.licensePlate}</span>
                         <span class="text-muted fw-bold">ID: #${car.id}</span>
                     </div>
                 </div>

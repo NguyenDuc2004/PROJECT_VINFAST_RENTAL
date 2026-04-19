@@ -13,13 +13,17 @@ public class CarDAO implements ICarDAO {
     @Override
     public List<Car> filterSearchCars(String keyword, String status, String category) {
         List<Car> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT c.*, cat.name AS category_name ");
-        sql.append("FROM cars c JOIN categories cat ON c.category_id = cat.id WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder("SELECT c.*, cat.name AS category_name, loc.name AS location_name ");
+        sql.append("FROM cars c ");
+        sql.append("JOIN categories cat ON c.category_id = cat.id ");
+        sql.append("LEFT JOIN locations loc ON c.location_id = loc.id ");
+        sql.append("WHERE 1=1 ");
 
         if (keyword != null && !keyword.isEmpty()) sql.append(" AND model_name LIKE ?");
         if (status != null && !status.isEmpty()) {
             sql.append(" AND status = ?");
-        } else sql.append(" AND c.status = 'AVAILABLE'");
+        }
+        else sql.append(" AND c.status = 'AVAILABLE'");
         if (category != null && !category.isEmpty()) sql.append(" AND category_id = ?");
 
         try (Connection conn = getConnection();
@@ -33,10 +37,15 @@ public class CarDAO implements ICarDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Car(
-                        rs.getInt("id"), rs.getInt("category_id"), rs.getInt("location_id"),
-                        rs.getString("model_name"), rs.getString("license_plate"),
-                        rs.getDouble("price_per_day"), rs.getString("image_url"),
-                        rs.getString("status"), rs.getString("description"),
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("location_name"),
+                        rs.getString("model_name"),
+                        rs.getString("license_plate"),
+                        rs.getDouble("price_per_day"),
+                        rs.getString("image_url"),
+                        rs.getString("status"),
+                        rs.getString("description"),
                         rs.getString("category_name")
                 ));
             }
@@ -80,9 +89,9 @@ public class CarDAO implements ICarDAO {
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, car.getCategoryId());
-            ps.setInt(2, 1); // location_id mặc định
+            ps.setInt(2, car.getLocationId()); // nho them truong nay vao form them moi
             ps.setString(3, car.getModelName());
-            ps.setString(4, car.getLicensePlate()); // Biển số lấy từ form
+            ps.setString(4, car.getLicensePlate());
             ps.setDouble(5, car.getPricePerDay());
             ps.setString(6, car.getImageUrl());
             ps.setString(7, car.getStatus());

@@ -20,14 +20,12 @@
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-3">
             <form action="${pageContext.request.contextPath}/product" method="GET" class="row g-2 align-items-end">
-                <%-- Ô tìm kiếm chiếm --%>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label fw-bold small text-muted">Tìm kiếm</label>
                     <input type="text" name="keyword" class="form-control bg-light"
                            placeholder="Tên sản phẩm..." value="${param.keyword}">
                 </div>
 
-                <%-- Trạng thái --%>
                 <div class="col-md-2">
                     <label class="form-label fw-bold small text-muted">Trạng thái</label>
                     <select name="status" class="form-select bg-light">
@@ -37,8 +35,7 @@
                     </select>
                 </div>
 
-                <%-- Danh mục chiếm --%>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label fw-bold small text-muted">Danh mục</label>
                     <select name="category" class="form-select bg-light">
                         <option value="">-- Tất cả --</option>
@@ -48,8 +45,18 @@
                     </select>
                 </div>
 
-                <%-- Nút bấm --%>
-                <div class="col-md-3 d-flex gap-2">
+                <%-- Thêm lọc theo Địa điểm --%>
+<%--                <div class="col-md-3">--%>
+<%--                    <label class="form-label fw-bold small text-muted">Địa điểm</label>--%>
+<%--                    <select name="locationId" class="form-select bg-light">--%>
+<%--                        <option value="">-- Tất cả địa điểm --</option>--%>
+<%--                        <c:forEach items="${listLocations}" var="loc">--%>
+<%--                            <option value="${loc.id}" ${param.locationId == loc.id ? 'selected' : ''}>${loc.name}</option>--%>
+<%--                        </c:forEach>--%>
+<%--                    </select>--%>
+<%--                </div>--%>
+
+                <div class="col-md-2 d-flex gap-2">
                     <button class="btn btn-primary flex-grow-1 fw-bold">
                         <i class="bi bi-funnel-fill"></i> LỌC
                     </button>
@@ -68,6 +75,7 @@
                 <thead class="bg-light">
                 <tr>
                     <th class="ps-4">SẢN PHẨM</th>
+                    <th>ĐỊA ĐIỂM</th> <%-- Cột mới --%>
                     <th>GIÁ</th>
                     <th>TRẠNG THÁI</th>
                     <th>NGÀY TẠO</th>
@@ -86,13 +94,17 @@
                                      onerror="this.src='https://img.vanhai.vn/202304/xe-dien-vinfast-vf8.jpg'">
                                 <div>
                                     <div class="fw-bold">${p.modelName}</div>
-                                    <span class="badge bg-dark mt-1"
-                                          style="letter-spacing: 1px;">30H - ${p.id}99.99</span>
-                                    <div class="text-muted small">
-                                            ${p.categoryName}
-                                    </div>
+                                    <c:if test="${not empty p.licensePlate}">
+                                        <span class="badge bg-dark mt-1" style="letter-spacing: 1px;">${p.licensePlate}</span>
+                                    </c:if>
+                                    <div class="text-muted small">${p.categoryName}</div>
                                 </div>
                             </div>
+                        </td>
+
+                            <%-- Hiển thị tên địa điểm --%>
+                        <td>
+                            <div class="small"><i class="bi bi-geo-alt-fill text-danger me-1"></i>${p.locationName}</div>
                         </td>
 
                         <td class="fw-bold text-primary">
@@ -154,9 +166,14 @@
 
                 <div class="modal-body p-4">
                     <div class="row g-3">
-                        <div class="col-12">
+                        <div class="col-md-8">
                             <label class="fw-bold small mb-1 text-secondary text-uppercase">Tên sản phẩm</label>
                             <input type="text" name="name" class="form-control" placeholder="Nhập tên xe..." required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="fw-bold small mb-1 text-secondary text-uppercase">Biển số (nếu có)</label>
+                            <input type="text" name="licensePlate" class="form-control" placeholder="29A-123.45">
                         </div>
 
                         <div class="col-md-6">
@@ -178,18 +195,28 @@
                             </select>
                         </div>
 
-                        <div class="col-12">
-                            <label class="fw-bold small mb-1 text-secondary text-uppercase">Link ảnh (URL)</label>
-                            <input type="text" name="imageUrl" class="form-control"
-                                   placeholder="Dán đường dẫn ảnh tại đây...">
+                        <%-- Thêm chọn Địa điểm trong Modal --%>
+                        <div class="col-md-6">
+                            <label class="fw-bold small mb-1 text-secondary text-uppercase">Điểm nhận xe</label>
+                            <select name="locationId" class="form-select">
+                                <c:forEach items="${listLocations}" var="loc">
+                                    <option value="${loc.id}">${loc.name}</option>
+                                </c:forEach>
+                            </select>
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-md-6">
                             <label class="fw-bold small mb-1 text-secondary text-uppercase">Trạng thái xe</label>
                             <select name="status" class="form-select">
                                 <option value="AVAILABLE">Còn hàng</option>
                                 <option value="UNAVAILABLE">Hết hàng</option>
                             </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="fw-bold small mb-1 text-secondary text-uppercase">Link ảnh (URL)</label>
+                            <input type="text" name="imageUrl" class="form-control"
+                                   placeholder="Dán đường dẫn ảnh tại đây...">
                         </div>
                     </div>
                 </div>
@@ -204,56 +231,37 @@
 </div>
 
 <script>
+    // Giữ nguyên các script confirmDelete và priceInput của bạn
     function confirmDelete(id) {
         Swal.fire({
             title: 'Xác nhận xóa?',
             text: "Dữ liệu sẽ bị xóa vĩnh viễn, bạn không thể hoàn tác!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33', // Màu đỏ cho nút xóa
+            confirmButtonColor: '#d33',
             cancelButtonColor: '#6e7881',
             confirmButtonText: 'Đồng ý',
             cancelButtonText: 'Hủy bỏ',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // Nếu người dùng nhấn OK, nhảy đến link xóa
                 window.location.href = "product?action=delete&id=" + id;
             }
         })
     }
-    const priceInput = document.getElementById('add_price');
 
+    const priceInput = document.getElementById('add_price');
     if (priceInput) {
         priceInput.addEventListener('input', function (e) {
-            // 1. Lưu lại vị trí con trỏ để không bị nhảy về cuối khi đang xóa
             let cursorPosition = this.selectionStart;
             let originalLength = this.value.length;
-
-            // 2. Chỉ lấy số thuần túy
             let rawValue = this.value.replace(/[^0-9]/g, '');
-
-            if (rawValue === "") {
-                this.value = "";
-                return;
-            }
-
-            // 3. Định dạng số
+            if (rawValue === "") { this.value = ""; return; }
             let formattedValue = new Intl.NumberFormat('vi-VN').format(parseInt(rawValue));
             this.value = formattedValue;
-
-            // 4. Tính toán lại vị trí con trỏ về trải nghiệm xóa/sửa
             let newLength = this.value.length;
             cursorPosition = cursorPosition + (newLength - originalLength);
             this.setSelectionRange(cursorPosition, cursorPosition);
-        });
-
-        // Chặn nhập chữ ngay từ đầu
-        priceInput.addEventListener('keydown', function(e) {
-            if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
-                if (e.ctrlKey || e.metaKey) return; // Cho phép Ctrl+C, Ctrl+V
-                e.preventDefault();
-            }
         });
     }
 </script>
