@@ -9,10 +9,10 @@ import java.util.List;
 
 public class OrderDAO implements IOrderDAO {
 
-    // Tập hợp hằng số SQL để dễ quản lý và tránh viết đè chuỗi SQL nhiều lần
-    private static final String SELECT_ALL_ORDERS = "SELECT id, customer_name, car_model, total_price, status, order_date FROM orders ORDER BY order_date DESC";
+    // 1. CẬP NHẬT CÁC CÂU SQL (Khớp với bảng orders mới)
+    private static final String SELECT_ALL_ORDERS = "SELECT * FROM orders ORDER BY order_date DESC";
     private static final String SELECT_ORDER_BY_ID = "SELECT * FROM orders WHERE id = ?";
-    private static final String INSERT_ORDER_SQL = "INSERT INTO orders (customer_name, car_model, total_price, status, order_date) VALUES (?, ?, ?, ?, ?)";
+    private static final String INSERT_ORDER_SQL = "INSERT INTO orders (user_id, car_id, customer_name, phone, email, start_date, end_date, total_price, note, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_STATUS_SQL = "UPDATE orders SET status = ? WHERE id = ?";
     private static final String DELETE_ORDER_SQL = "DELETE FROM orders WHERE id = ?";
 
@@ -21,7 +21,6 @@ public class OrderDAO implements IOrderDAO {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = DbConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_ALL_ORDERS)) {
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 orders.add(mapResultSetToOrder(rs));
@@ -37,7 +36,6 @@ public class OrderDAO implements IOrderDAO {
         Order order = null;
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_ORDER_BY_ID)) {
-
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -52,13 +50,10 @@ public class OrderDAO implements IOrderDAO {
     public List<Order> selectOrdersByUserId(int userId) {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC";
-
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
-
             while (rs.next()) {
                 orders.add(mapResultSetToOrder(rs));
             }
@@ -69,20 +64,42 @@ public class OrderDAO implements IOrderDAO {
     }
 
     @Override
-    public void insertOrder(Order order) {
+    public boolean checkActiveOrder(int carId) {
+        String sql = "SELECT COUNT(*) FROM orders WHERE car_id = ? AND status IN (0, 1)";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, carId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean insertOrder(Order order) {
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_ORDER_SQL)) {
 
-            ps.setString(1, order.getCustomerName());
-            ps.setString(2, order.getCarModel());
-            ps.setDouble(3, order.getTotalPrice());
-            ps.setInt(4, order.getStatus());
-            // Sử dụng thời gian hiện tại của hệ thống khi tạo đơn
-            ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+            ps.setInt(1, order.getUserId());
+            ps.setInt(2, order.getCarId());
+            ps.setString(3, order.getCustomerName());
+            ps.setString(4, order.getPhone());
+            ps.setString(5, order.getEmail());
+            ps.setDate(6, order.getStartDate());
+            ps.setDate(7, order.getEndDate());
+            ps.setDouble(8, order.getTotalPrice());
+            ps.setString(9, order.getNote());
+            ps.setInt(10, order.getStatus());
+            return ps.executeUpdate() > 0;
 
-            ps.executeUpdate();
         } catch (SQLException e) {
+            System.err.println("Lỗi SQL tại insertOrder: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -91,7 +108,6 @@ public class OrderDAO implements IOrderDAO {
         boolean rowUpdated = false;
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_STATUS_SQL)) {
-
             ps.setInt(1, status);
             ps.setInt(2, id);
             rowUpdated = ps.executeUpdate() > 0;
@@ -106,7 +122,6 @@ public class OrderDAO implements IOrderDAO {
         boolean rowDeleted = false;
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(DELETE_ORDER_SQL)) {
-
             ps.setInt(1, id);
             rowDeleted = ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -115,12 +130,19 @@ public class OrderDAO implements IOrderDAO {
         return rowDeleted;
     }
 
+
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setId(rs.getInt("id"));
+        order.setUserId(rs.getInt("user_id"));
+        order.setCarId(rs.getInt("car_id"));
         order.setCustomerName(rs.getString("customer_name"));
-        order.setCarModel(rs.getString("car_model"));
+        order.setPhone(rs.getString("phone"));
+        order.setEmail(rs.getString("email"));
+        order.setStartDate(rs.getDate("start_date"));
+        order.setEndDate(rs.getDate("end_date"));
         order.setTotalPrice(rs.getDouble("total_price"));
+        order.setNote(rs.getString("note"));
         order.setStatus(rs.getInt("status"));
         order.setOrderDate(rs.getTimestamp("order_date"));
         return order;

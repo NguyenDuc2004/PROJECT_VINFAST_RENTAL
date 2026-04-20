@@ -1,7 +1,9 @@
 package org.example.pj_thuexe_vinfast.controller;
 
+import org.example.pj_thuexe_vinfast.modal.Location;
 import org.example.pj_thuexe_vinfast.modal.Order;
 import org.example.pj_thuexe_vinfast.modal.User;
+import org.example.pj_thuexe_vinfast.service.CarService;
 import org.example.pj_thuexe_vinfast.service.OrderService;
 import org.example.pj_thuexe_vinfast.service.UserService;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class HomeServlet extends HttpServlet {
     private UserService userService = new UserService();
     private OrderService orderService = new OrderService();
+    private CarService carService = new CarService();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
@@ -26,6 +29,7 @@ public class HomeServlet extends HttpServlet {
         String page = req.getParameter("page");
         HttpSession session = req.getSession();
         User currUser = (User) session.getAttribute("currUser");
+
         if ("profile".equals(page)) {
             if (currUser == null) {
                 resp.sendRedirect("login"); // Chưa login thì đá ra trang login

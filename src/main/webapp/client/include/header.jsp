@@ -67,4 +67,6 @@
         padding: 10px 20px;
         font-weight: 600;
     }
+
+
 </style>
