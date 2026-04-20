@@ -17,4 +17,10 @@ public interface IOrderDAO {
     List<Order> selectOrdersByUserId(int userId);
 
     public boolean checkActiveOrder(int carId);
+
+    int countOrdersByStatus(int status);
+
+    public double calculateTotalRevenue();
+
+    public List<Double> getRevenueLast6Months();
 }

@@ -1,146 +1,232 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    :root {
+        --vin-blue: #063197;
+        --vin-red: #da291c;
+    }
+    .dashboard-wrapper { background: #f8f9fa; padding: 20px; min-height: 100vh; }
+    .icon-box {
+        width: 54px; height: 54px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 14px; font-size: 1.6rem;
+    }
+    .card-stat {
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none !important;
+    }
+    .card-stat:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+    }
+    .chart-card {
+        background: white; border-radius: 20px; padding: 24px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .stat-label { font-size: 0.85rem; letter-spacing: 0.5px; color: #6c757d; }
+
+    /* Hiệu ứng nháy cho đơn hàng mới */
+    @keyframes pulse-red {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .pulsate { animation: pulse-red 2s infinite; }
+</style>
 
 <div class="dashboard-wrapper">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold text-dark mb-0">Thống kê hệ thống</h4>
-    <div class="text-muted small">Cập nhật lần cuối: <span id="current-time"></span></div>
-  </div>
-
-  <div class="row g-4 mb-5">
-    <div class="col-md-4">
-      <div class="card card-stat p-4 bg-white border-0 shadow-sm Ripple-effect"
-           onclick="location.href='${pageContext.request.contextPath}/user'">
-        <div class="d-flex align-items-center">
-          <div class="icon-box bg-primary-subtle text-primary me-3">
-            <i class="bi bi-people-fill"></i>
-          </div>
-          <div>
-            <p class="text-muted mb-0 small fw-bold text-uppercase">Người dùng</p>
-            <h3 class="mb-0 fw-bold text-dark">${TotalUser}</h3>
-          </div>
+    <div class="d-flex justify-content-end align-items-center mb-4">
+        <div class="badge bg-white text-dark shadow-sm p-2 px-3 border border-0">
+            <i class="bi bi-clock-history me-2 text-primary"></i>
+            <span id="current-time"></span>
         </div>
-        <div class="mt-3 small">
-          <span class="text-success fw-bold"><i class="bi bi-arrow-up"></i> 5%</span>
-          <span class="text-muted ms-1">so với tháng trước</span>
-        </div>
-      </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="card card-stat p-4 bg-white border-0 shadow-sm Ripple-effect">
-        <div class="d-flex align-items-center">
-          <div class="icon-box bg-success-subtle text-success me-3">
-            <i class="bi bi-cart-check-fill"></i>
-          </div>
-          <div>
-            <p class="text-muted mb-0 small fw-bold text-uppercase">Đơn hàng mới</p>
-            <h3 class="mb-0 fw-bold text-dark">24</h3>
-          </div>
-        </div>
-        <div class="mt-3 small">
-          <span class="text-success fw-bold"><i class="bi bi-arrow-up"></i> 12%</span>
-          <span class="text-muted ms-1">tăng trưởng</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card card-stat p-4 bg-white border-0 shadow-sm Ripple-effect"
-           onclick="location.href='${pageContext.request.contextPath}/product'">
-        <div class="d-flex align-items-center">
-          <div class="icon-box bg-warning-subtle text-warning me-3">
-            <i class="bi bi-box-seam-fill"></i>
-          </div>
-          <div>
-            <p class="text-muted mb-0 small fw-bold text-uppercase">Sản phẩm</p>
-            <h3 class="mb-0 fw-bold text-dark">156</h3>
-          </div>
-        </div>
-        <div class="mt-3 small">
-          <span class="text-muted">Kho hàng: <strong class="text-dark">85%</strong> công suất</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-4">
-    <div class="col-lg-8">
-      <div class="data-table-container shadow-sm border-0 h-100">
-        <h5 class="fw-bold mb-4">Hoạt động gần đây</h5>
-        <div class="alert alert-light border-0 py-5 text-center">
-          <i class="bi bi-graph-up-arrow fs-1 text-muted opacity-25"></i>
-          <p class="mt-3 text-muted">Biểu đồ doanh thu sẽ hiển thị tại đây khi có dữ liệu.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4">
-      <div class="data-table-container shadow-sm border-0 h-100">
-        <h5 class="fw-bold mb-4">Thông báo</h5>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item px-0 border-0 mb-2">
-            <div class="d-flex align-items-start">
-              <div class="bg-info-subtle text-info p-2 rounded-3 me-3"><i class="bi bi-info-circle"></i></div>
-              <div>
-                <div class="small fw-bold">Hệ thống bảo trì</div>
-                <div class="text-muted" style="font-size: 0.75rem;">Dự kiến vào lúc 2h sáng mai.</div>
-              </div>
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card card-stat p-3 bg-white shadow-sm">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box bg-success-subtle text-success me-3">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
+                    <div>
+                        <p class="mb-0 stat-label fw-bold text-uppercase">Doanh thu thực</p>
+                        <h4 class="mb-0 fw-bold text-dark">
+                            <fmt:formatNumber value="${TotalRevenue != null ? TotalRevenue : 0}" type="currency" currencySymbol="₫" />
+                        </h4>
+                    </div>
+                </div>
             </div>
-          </li>
-          <li class="list-group-item px-0 border-0">
-            <div class="d-flex align-items-start">
-              <div class="bg-danger-subtle text-danger p-2 rounded-3 me-3"><i class="bi bi-exclamation-triangle"></i></div>
-              <div>
-                <div class="small fw-bold">Cảnh báo tồn kho</div>
-                <div class="text-muted" style="font-size: 0.75rem;">iPhone 15 Pro Max sắp hết hàng.</div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Danh sách đơn hàng thuê xe</h6>
+        <div class="col-md-3">
+            <div class="card card-stat p-3 bg-white shadow-sm" onclick="location.href='user'">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box bg-primary-subtle text-primary me-3">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div>
+                        <p class="mb-0 stat-label fw-bold text-uppercase">Khách hàng</p>
+                        <h4 class="mb-0 fw-bold text-dark">${TotalUser != null ? TotalUser : 0}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-stat p-3 bg-white shadow-sm" onclick="location.href='admin-orders'">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box bg-danger-subtle text-danger me-3">
+                        <i class="bi bi-bell-fill pulsate"></i>
+                    </div>
+                    <div>
+                        <p class="mb-0 stat-label fw-bold text-uppercase">Chờ duyệt</p>
+                        <h4 class="mb-0 fw-bold text-danger">${NewOrders != null ? NewOrders : 0}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-stat p-3 bg-white shadow-sm" onclick="location.href='product'">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box bg-warning-subtle text-warning me-3">
+                        <i class="bi bi-car-front-fill"></i>
+                    </div>
+                    <div>
+                        <p class="mb-0 stat-label fw-bold text-uppercase">Đội xe</p>
+                        <h4 class="mb-0 fw-bold text-dark">${TotalCar != null ? TotalCar : 0}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Mã đơn</th>
-                <th>Khách hàng</th>
-                <th>Dòng xe</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-                <th>Ngày đặt</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="order" items="${listOrder}">
-                <tr>
-                    <td>${order.id}</td>
-                    <td>${order.customerName}</td>
-                    <td>${order.carModel}</td>
-                    <td>${order.totalPrice} VNĐ</td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${order.status == 0}"><span class="badge bg-warning text-dark">Chờ duyệt</span></c:when>
-                            <c:when test="${order.status == 1}"><span class="badge bg-success">Đang thuê</span></c:when>
-                            <c:otherwise><span class="badge bg-secondary">Khác</span></c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>${order.orderDate}</td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="chart-card shadow-sm h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0">Hiệu suất doanh thu (Số thực)</h5>
+                    <span class="badge bg-light text-dark border">6 tháng gần nhất</span>
+                </div>
+                <div style="height: 320px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="chart-card shadow-sm h-100 text-center">
+                <h5 class="fw-bold mb-4 text-start">Tình trạng đội xe</h5>
+                <div style="height: 250px;">
+                    <canvas id="carStatusChart"></canvas>
+                </div>
+                <div class="mt-4 pt-3 border-top">
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <p class="text-muted mb-1 small">Đang thuê</p>
+                            <h5 class="fw-bold text-danger">${TotalCarUnavailable != null ? TotalCarUnavailable : 0}</h5>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-muted mb-1 small">Sẵn sàng</p>
+                            <h5 class="fw-bold text-success">${TotalCarAvailable != null ? TotalCarAvailable : 0}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-  // Script nhỏ để hiển thị thời gian thực tế
-  document.getElementById('current-time').innerText = new Date().toLocaleString('vi-VN');
+    // Cập nhật thời gian thực
+    const updateTime = () => {
+        document.getElementById('current-time').innerText = new Date().toLocaleString('vi-VN');
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Biểu đồ Doanh thu số thực
+        const ctxRev = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctxRev, {
+            type: 'line',
+            data: {
+                labels: ['Tháng 11', 'Tháng 12', 'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4'],
+                datasets: [{
+                    label: 'Doanh thu thực tế',
+                    // Đổ chuỗi số thực từ Servlet vào đây, ví dụ: 10.5, 20.2...
+                    data: [${RevenueData != null ? RevenueData : "0, 0, 0, 0, 0, 0"}],
+                    borderColor: '#063197',
+                    backgroundColor: 'rgba(6, 49, 151, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#063197',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' ₫';
+                            }
+                        }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 2. Biểu đồ Trạng thái Xe số thực
+        const ctxCar = document.getElementById('carStatusChart').getContext('2d');
+        new Chart(ctxCar, {
+            type: 'doughnut',
+            data: {
+                labels: ['Sẵn sàng', 'Đang thuê'],
+                datasets: [{
+                    data: [
+                        ${TotalCarAvailable != null ? TotalCarAvailable : 0},
+                        ${TotalCarUnavailable != null ? TotalCarUnavailable : 0}
+                    ],
+                    backgroundColor: ['#198754', '#da291c'],
+                    hoverOffset: 20,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true } }
+                }
+            }
+        });
+    });
 </script>

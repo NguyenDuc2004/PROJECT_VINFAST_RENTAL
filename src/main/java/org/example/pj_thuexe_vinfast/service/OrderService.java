@@ -165,4 +165,17 @@ public class OrderService {
     public void addOrder(Order order) {
         orderDAO.insertOrder(order);
     }
+
+    public int countOrdersByStatus(int status){
+        return orderDAO.countOrdersByStatus(status);
+    }
+
+    public double getTotalRevenue() {
+        return orderDAO.calculateTotalRevenue();
+    }
+
+    public List<Double> getRevenueLast6Months(){
+        return orderDAO.getRevenueLast6Months();
+    }
+
 }

@@ -94,4 +94,8 @@ public class CarService {
     public boolean updateCarStatus(int carId, String status) {
         return carDAO.updateStatus(carId, status);
     }
+
+    public int getTotalCarsCount(String... statuses) {
+        return carDAO.getCountProduct(statuses);
+    }
 }

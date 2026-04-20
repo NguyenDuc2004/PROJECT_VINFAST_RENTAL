@@ -20,4 +20,7 @@ public interface ICarDAO {
 
     public boolean updateStatus(int carId, String status);
 
+    int getCountProduct(String... statuses);
+
+
 }

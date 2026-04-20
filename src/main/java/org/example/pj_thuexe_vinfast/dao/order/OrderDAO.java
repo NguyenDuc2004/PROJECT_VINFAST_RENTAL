@@ -147,4 +147,64 @@ public class OrderDAO implements IOrderDAO {
         order.setOrderDate(rs.getTimestamp("order_date"));
         return order;
     }
+
+    @Override
+    public int countOrdersByStatus(int status) {
+        String sql = "SELECT COUNT(*) FROM orders WHERE status = ?";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, status);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public double calculateTotalRevenue() {
+        double total = 0;
+        String sql = "SELECT SUM(total_price) FROM orders WHERE status = 2";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    @Override
+    public List<Double> getRevenueLast6Months() {
+        List<Double> revenues = new ArrayList<>();
+        String sql = "SELECT SUM(total_price) as total " +
+                "FROM orders " +
+                "WHERE start_date >= DATE_SUB(NOW(), INTERVAL 5 MONTH) " +
+                "AND status = 2 " +
+                "GROUP BY MONTH(start_date), YEAR(start_date) " +
+                "ORDER BY YEAR(start_date) ASC, MONTH(start_date) ASC";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                revenues.add(rs.getDouble("total"));
+            }
+
+            while (revenues.size() < 6) {
+                revenues.add(0, 0.0);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return revenues;
+    }
 }

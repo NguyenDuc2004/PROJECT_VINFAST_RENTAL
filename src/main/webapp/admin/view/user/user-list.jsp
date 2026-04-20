@@ -195,7 +195,7 @@
                   <select name="roleId" class="form-select border-primary-subtle">
                     <option value="1">ADMIN - Toàn quyền quản trị</option>
                     <option value="2" selected>STAFF - Nhân viên vận hành</option>
-                    <option value="3">USER - Khách hàng thành viên</option>
+                    <option value="0">USER - Khách hàng thành viên</option>
                   </select>
                 </div>
               </div>

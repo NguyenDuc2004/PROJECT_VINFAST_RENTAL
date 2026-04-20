@@ -190,4 +190,36 @@ public class CarDAO implements ICarDAO {
         }
         return false;
     }
+
+    @Override
+    public int getCountProduct(String... statuses) {
+        int count = 0;
+        // Tự động tạo số lượng dấu hỏi chấm dựa trên số tham số truyền vào
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM cars WHERE status IN (");
+        for (int i = 0; i < statuses.length; i++) {
+            sql.append("?");
+            if (i < statuses.length - 1) sql.append(",");
+        }
+        sql.append(")");
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            // Nạp các giá trị vào dấu hỏi chấm
+            for (int i = 0; i < statuses.length; i++) {
+                ps.setString(i + 1, statuses[i]);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+
 }
