@@ -13,4 +13,5 @@ public interface IUserDAO {
     boolean editedUser(User user);
     int countUser(int role);
     public boolean checkEmailExists(String email);
+    public boolean register(String fullname, String email, String password, String phone);
 }

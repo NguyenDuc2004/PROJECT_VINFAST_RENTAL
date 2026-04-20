@@ -120,4 +120,36 @@ public class UserService {
         return userDAO.insertUser(user);
     }
 
+    public boolean checkEmailExists(String email) {
+            return userDAO.checkEmailExists(email);
+    }
+
+    public void register(String fullname, String email, String password, String phone) {
+
+        if (fullname == null || fullname.trim().isEmpty())
+            throw new RuntimeException("Họ tên không được để trống!");
+
+        if (email == null || email.trim().isEmpty())
+            throw new RuntimeException("Email không được để trống!");
+
+        if (userDAO.checkEmailExists(email)) {
+            throw new RuntimeException("Email này đã được sử dụng rồi anh ơi!");
+        }
+
+        if (password == null || password.length() < 6) {
+            throw new RuntimeException("Mật khẩu ít nhất phải 6 ký tự nhé!");
+        }
+
+        boolean isSuccess = userDAO.register(fullname, email, password, phone);
+        if (!isSuccess) {
+            throw new RuntimeException("Lỗi Database rồi, bảo Đức kiểm tra lại SQL đi!");
+        }
+    }
+
+    private String encodePassword(String password) {
+        // Sau này anh thay bằng BCrypt hoặc MD5 nhé
+        // Hiện tại cứ để trả về password hoặc thêm tiền tố để phân biệt
+        return password;
+    }
+
 }

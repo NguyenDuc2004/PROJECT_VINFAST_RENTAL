@@ -197,4 +197,23 @@ public class UserDAO implements IUserDAO {
         }
     }
 
+    @Override
+    public boolean register(String fullname, String email, String password, String phone) {
+        String sql = "INSERT INTO users (fullname, email, password, phone, role) VALUES (?, ?, ?, ?, 0)";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, fullname);
+            ps.setString(2, email);
+            ps.setString(3, password);
+            ps.setString(4, phone);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

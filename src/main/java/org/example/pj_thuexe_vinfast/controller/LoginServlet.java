@@ -17,6 +17,11 @@ public class LoginServlet extends HttpServlet {
     UserService userService = new UserService();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String isSuccess = req.getParameter("registerSuccess");
+        if ("true".equals(isSuccess)) {
+            req.setAttribute("message", "Chúc mừng! Bạn đã đăng ký tài khoản thành công. Vui lòng đăng nhập.");
+        }
         String action = req.getParameter("action");
 
         if ("logout".equals(action)) {

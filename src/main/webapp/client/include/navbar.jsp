@@ -34,7 +34,7 @@
                     <%-- TRƯỜNG HỢP CHƯA ĐĂNG NHẬP --%>
                     <c:when test="${empty sessionScope.currUser}">
                         <a href="${pageContext.request.contextPath}/login" class="btn btn-outline-light me-2 rounded-pill px-4">Đăng nhập</a>
-                        <a href="#" class="btn btn-primary rounded-pill px-4">Đăng ký</a>
+                        <a href="${pageContext.request.contextPath}/register" class="btn btn-primary rounded-pill px-4">Đăng ký</a>
                     </c:when>
 
                     <%-- TRƯỜNG HỢP ĐÃ ĐĂNG NHẬP --%>

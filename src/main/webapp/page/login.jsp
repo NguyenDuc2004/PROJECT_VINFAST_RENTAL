@@ -171,6 +171,7 @@
         <button type="submit" class="btn btn-primary w-100 shadow mb-4">
           Đăng nhập<i class="bi bi-arrow-right-short ms-1"></i>
         </button>
+        <a class="pt-4" href="${pageContext.request.contextPath}/register">Đăng ký</a>
       </form>
 
       <div class="mt-5 text-center">
