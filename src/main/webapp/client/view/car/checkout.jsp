@@ -73,7 +73,20 @@
                         <span id="totalDisplay" class="total-amount">0đ</span>
                     </div>
                 </div>
+                <div class="payment-methods mb-4">
+                    <label class="form-label text-muted small fw-bold text-uppercase">Phương thức thanh toán</label>
+                    <div class="d-grid gap-2">
+                        <input type="radio" class="btn-check" name="paymentMethod" id="payAtOffice" value="COD" checked>
+                        <label class="btn btn-outline-secondary text-start p-3 rounded-4" for="payAtOffice">
+                            <i class="bi bi-cash-stack me-2"></i> Thanh toán khi nhận xe
+                        </label>
 
+                        <input type="radio" class="btn-check" name="paymentMethod" id="payBank" value="BANK">
+                        <label class="btn btn-outline-secondary text-start p-3 rounded-4" for="payBank">
+                            <i class="bi bi-qr-code-scan me-2"></i> Chuyển khoản qua mã QR (Ưu tiên)
+                        </label>
+                    </div>
+                </div>
                 <button type="button" onclick="confirmOrder()" class="btn-confirm-order mt-4 shadow">XÁC NHẬN ĐẶT XE</button>
             </div>
         </div>

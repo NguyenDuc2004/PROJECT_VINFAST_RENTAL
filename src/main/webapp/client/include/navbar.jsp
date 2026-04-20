@@ -30,17 +30,6 @@
             </ul>
 
             <div class="d-flex align-items-center">
-                <%-- 1. ICON GIỎ HÀNG (Cần đăng nhập mới xem được chi tiết giỏ hàng) --%>
-                <a href="${empty sessionScope.currUser ? pageContext.request.contextPath.concat('/login') : pageContext.request.contextPath.concat('/cart')}"
-                   class="position-relative me-4 text-white decoration-none">
-                    <i class="bi bi-cart3 fs-4"></i>
-                    <c:if test="${not empty sessionScope.currUser}">
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                            0 <%-- Số lượng xe trong giỏ --%>
-                        </span>
-                    </c:if>
-                </a>
-
                 <c:choose>
                     <%-- TRƯỜNG HỢP CHƯA ĐĂNG NHẬP --%>
                     <c:when test="${empty sessionScope.currUser}">
@@ -65,7 +54,6 @@
                                        href="${pageContext.request.contextPath}/home?page=profile">
                                     <i class="bi bi-person me-2"></i>Cá nhân
                                 </a></li>
-                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/cart"><i class="bi bi-cart-check me-2"></i>Giỏ hàng của tôi</a></li>
                                 <li><a class="dropdown-item ${view == 'user-history' ? 'active' : ''}"
                                        href="${pageContext.request.contextPath}/home?page=history">
                                     <i class="bi bi-clock-history me-2"></i>Lịch sử thuê

@@ -64,7 +64,23 @@ public class OrderDAO implements IOrderDAO {
     }
 
     @Override
-    public void insertOrder(Order order) {
+    public boolean checkActiveOrder(int carId) {
+        String sql = "SELECT COUNT(*) FROM orders WHERE car_id = ? AND status IN (0, 1)";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, carId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean insertOrder(Order order) {
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_ORDER_SQL)) {
 
@@ -73,15 +89,17 @@ public class OrderDAO implements IOrderDAO {
             ps.setString(3, order.getCustomerName());
             ps.setString(4, order.getPhone());
             ps.setString(5, order.getEmail());
-            ps.setDate(6, order.getStartDate()); // java.sql.Date
-            ps.setDate(7, order.getEndDate());   // java.sql.Date
+            ps.setDate(6, order.getStartDate());
+            ps.setDate(7, order.getEndDate());
             ps.setDouble(8, order.getTotalPrice());
             ps.setString(9, order.getNote());
             ps.setInt(10, order.getStatus());
+            return ps.executeUpdate() > 0;
 
-            ps.executeUpdate();
         } catch (SQLException e) {
+            System.err.println("Lỗi SQL tại insertOrder: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
     }
 

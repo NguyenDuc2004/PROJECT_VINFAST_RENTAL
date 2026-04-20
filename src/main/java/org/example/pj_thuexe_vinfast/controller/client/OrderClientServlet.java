@@ -2,6 +2,7 @@ package org.example.pj_thuexe_vinfast.controller.client;
 
 import org.example.pj_thuexe_vinfast.modal.Order;
 import org.example.pj_thuexe_vinfast.modal.User;
+import org.example.pj_thuexe_vinfast.service.CarService;
 import org.example.pj_thuexe_vinfast.service.OrderService;
 
 import javax.servlet.ServletException;
@@ -17,10 +18,12 @@ import java.sql.Date;
 public class OrderClientServlet extends HttpServlet {
 
     private OrderService orderService = new OrderService();
-
+    private CarService carService = new CarService();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Không dùng trang success riêng nữa nên có thể để trống hoặc xóa
+        req.setAttribute("title", "Đặt xe thành công");
+        req.setAttribute("view", "order-success");
+        req.getRequestDispatcher("client/layout.jsp").forward(req, resp);
     }
 
     @Override
@@ -42,7 +45,9 @@ public class OrderClientServlet extends HttpServlet {
             return;
         }
 
-        int carId = Integer.parseInt(req.getParameter("carId"));
+        // Lấy carId ngay từ đầu để dùng cho việc Redirect khi lỗi
+        String carIdStr = req.getParameter("carId");
+        int carId = Integer.parseInt(carIdStr);
 
         try {
             Order newOrder = new Order();
@@ -57,21 +62,27 @@ public class OrderClientServlet extends HttpServlet {
             newOrder.setNote(req.getParameter("note"));
             newOrder.setStatus(0);
 
-            boolean isSaved = orderService.createOrder(newOrder);
 
-            if (isSaved) {
-                // ĐẶT THÔNG BÁO VÀO SESSION
-                session.setAttribute("orderStatus", "success");
-            } else {
-                session.setAttribute("orderStatus", "fail");
-            }
+            orderService.createOrder(newOrder);
+
+            carService.updateCarStatus(carId, "UNAVAILABLE");
+
+            session.setAttribute("message", "Đặt xe thành công!");
+            session.setAttribute("msgType", "success");
+
+            resp.sendRedirect(req.getContextPath() + "/order");
+            return;
 
         } catch (Exception e) {
+            // BẮT MỌI LỖI: Từ lỗi trống SĐT, lỗi định dạng ngày, đến lỗi ép kiểu giá tiền
             e.printStackTrace();
-            session.setAttribute("orderStatus", "error");
-        }
 
-        // LUÔN QUAY VỀ TRANG CHECKOUT (Đứng im tại trang này)
-        resp.sendRedirect(req.getContextPath() + "/cars?action=checkout&id=" + carId);
+            // Lấy đúng cái tin nhắn "Số điện thoại không được để trống" từ Service ném về
+            session.setAttribute("message", e.getMessage());
+            session.setAttribute("msgType", "danger");
+
+            // Đẩy khách quay lại trang Checkout để họ thấy cái Toast trượt ra báo lỗi
+            resp.sendRedirect(req.getContextPath() + "/cars?action=checkout&id=" + carId);
+        }
     }
 }

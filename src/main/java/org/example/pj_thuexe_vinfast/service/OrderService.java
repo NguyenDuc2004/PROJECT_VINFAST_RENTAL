@@ -11,11 +11,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 public class OrderService {
-    private IOrderDAO orderDAO;
-
-    public OrderService() {
-        this.orderDAO = new OrderDAO();
-    }
+   IOrderDAO orderDAO = new OrderDAO();
 
     public List<Order> getAllOrders() {
         return orderDAO.selectAllOrders();
@@ -29,19 +25,53 @@ public class OrderService {
         return orderDAO.getOrderById(id);
     }
 
-    public boolean updateStatus(int id, int status) {
-        return orderDAO.updateStatus(id, status);
+    public void updateStatus(int id, int status) throws Exception {
+        // 1. Kiểm tra đơn hàng có tồn tại không
+        Order order = orderDAO.getOrderById(id);
+        if (order == null) {
+            throw new Exception("Đơn hàng mã #" + id + " không tồn tại!");
+        }
+
+        int currentStatus = order.getStatus();
+
+        // 2. Chặn các nghiệp vụ phi lý
+        if (currentStatus == 2) {
+            throw new Exception("Thao tác thất bại: Đơn hàng này đã hoàn thành, không thể sửa đổi.");
+        }
+
+        if (currentStatus == 3) {
+            throw new Exception("Thao tác thất bại: Đơn hàng này đã bị hủy, không thể cập nhật.");
+        }
+
+        // Ví dụ: Đang chờ duyệt (0) mà nhảy thẳng lên Hoàn thành (2) là vô lý
+        if (currentStatus == 0 && status == 2) {
+            throw new Exception("Quy trình sai: Bạn phải duyệt cho thuê xe trước khi xác nhận hoàn thành.");
+        }
+
+        boolean isSuccess = orderDAO.updateStatus(id, status);
+
+        if (!isSuccess) {
+            throw new Exception("Lỗi Database: Không thể cập nhật trạng thái đơn hàng lúc này.");
+        }
     }
 
-    // HÀM MỚI: Dùng cho OrderClientServlet khi khách đặt xe
-    public boolean createOrder(Order order) {
-        try {
-            // Anh có thể thêm logic kiểm tra xe có còn trống trong thời gian này không ở đây
-            orderDAO.insertOrder(order);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+    // Dùng cho OrderClientServlet khi khách đặt xe
+    public void createOrder(Order order) throws Exception {
+        // 1. Kiểm tra NULL/Rỗng trước khi Match
+        if (order.getPhone() == null || order.getPhone().trim().isEmpty()) {
+            throw new Exception("Đặt xe thất bại: Số điện thoại không được để trống!");
+        }
+
+        // 2. Kiểm tra định dạng (Regex)
+        if (!order.getPhone().matches("^\\d{10}$")) {
+            throw new Exception("Đặt xe thất bại: Số điện thoại phải bao gồm đúng 10 chữ số!");
+        }
+
+        // 3. Thực hiện lưu vào DB
+        boolean isSaved = orderDAO.insertOrder(order);
+
+        if (!isSaved) {
+            throw new Exception("Lỗi hệ thống: Không thể ghi nhận đơn hàng vào cơ sở dữ liệu.");
         }
     }
 
@@ -103,12 +133,33 @@ public class OrderService {
         }
     }
 
-    public boolean deleteOrder(int id) {
-        Order order = orderDAO.getOrderById(id);
-        if (order != null && (order.getStatus() == 0 || order.getStatus() == 3)) {
-            return orderDAO.deleteOrder(id);
+    public String deleteOrder(int id) {
+        try {
+            Order order = orderDAO.getOrderById(id);
+
+            if (order == null) {
+                return "Đơn hàng không tồn tại trên hệ thống!";
+            }
+
+            if (order.getStatus() == 1) {
+                return "Không thể xóa: Xe đang được khách hàng sử dụng!";
+            }
+            if (order.getStatus() == 2) {
+                return "Không thể xóa: Đơn hàng đã hoàn thành, cần giữ lại để đối soát doanh thu!";
+            }
+
+            boolean isDeleted = orderDAO.deleteOrder(id);
+
+            if (isDeleted) {
+                return "SUCCESS";
+            } else {
+                return "Lỗi: Không thể xóa dữ liệu trong cơ sở dữ liệu.";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Lỗi hệ thống: " + e.getMessage();
         }
-        return false;
     }
 
     public void addOrder(Order order) {

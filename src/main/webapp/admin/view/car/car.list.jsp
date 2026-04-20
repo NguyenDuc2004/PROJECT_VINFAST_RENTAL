@@ -73,6 +73,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light">
                 <tr>
+                    <th class="ps-4">ID</th>
                     <th class="ps-4">SẢN PHẨM</th>
                     <th>ĐỊA ĐIỂM</th> <%-- Cột mới --%>
                     <th>GIÁ</th>
@@ -85,6 +86,9 @@
                 <tbody>
                 <c:forEach items="${listProduct}" var="p">
                     <tr>
+                        <td>
+                            <div class="small">${p.id}</div>
+                        </td>
                         <td class="ps-4">
                             <div class="d-flex align-items-center">
                                 <c:set var="img" value="${p.imageUrl}"/>
@@ -124,7 +128,7 @@
                             </c:choose>
                         </td>
 
-                        <td class="small text-muted">13/04/2026</td>
+                        <td class="small text-muted">20-4-2026</td>
 
                         <td class="text-end pe-4">
                             <div class="btn-group">

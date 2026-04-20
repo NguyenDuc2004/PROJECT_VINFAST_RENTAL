@@ -1,5 +1,6 @@
 package org.example.pj_thuexe_vinfast.controller.admin;
 
+import org.example.pj_thuexe_vinfast.modal.Car;
 import org.example.pj_thuexe_vinfast.modal.Order;
 import org.example.pj_thuexe_vinfast.service.OrderService;
 import org.example.pj_thuexe_vinfast.service.CarService; // Nên thêm cái này
@@ -9,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
@@ -59,7 +61,7 @@ public class OrderServlet extends HttpServlet {
                 insertOrder(request, response);
                 break;
             case "updateStatus":
-//                updateOrderStatus(request, response);
+                updateOrderStatus(request, response);
                 break;
         }
     }
@@ -92,38 +94,72 @@ public class OrderServlet extends HttpServlet {
 
     private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        int status = Integer.parseInt(request.getParameter("status"));
+        HttpSession session = request.getSession();
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            int status = Integer.parseInt(request.getParameter("status"));
 
-        // Lấy thông tin đơn hàng trước khi update để biết carId
-        Order order = orderService.getOrderById(id);
-
-        if (order != null) {
             orderService.updateStatus(id, status);
 
-            // LOGIC QUAN TRỌNG: Đồng bộ trạng thái xe trong Database
-            if (status == 1) {
-                // Nếu Admin bấm "Duyệt/Đang thuê" -> Chuyển xe thành UNAVAILABLE
-                carService.updateCarStatus(order.getCarId(), "UNAVAILABLE");
-            } else if (status == 2 || status == 3) {
-                // Nếu "Hoàn thành" hoặc "Hủy" -> Trả xe về AVAILABLE để người khác thuê
-                carService.updateCarStatus(order.getCarId(), "AVAILABLE");
-            }
+            Order order = orderService.getOrderById(id);
+
+            if (status == 1) carService.updateCarStatus(order.getCarId(), "UNAVAILABLE");
+            else if (status == 2 || status == 3) carService.updateCarStatus(order.getCarId(), "AVAILABLE");
+
+            session.setAttribute("toastMsg", "Cập nhật trạng thái đơn hàng thành công!");
+            session.setAttribute("msgType", "success");
+
+        } catch (NumberFormatException e) {
+            session.setAttribute("toastMsg", "Dữ liệu ID hoặc Trạng thái không hợp lệ!");
+            session.setAttribute("msgType", "danger");
+        } catch (Exception e) {
+            // BẮT MỌI LỖI TỪ SERVICE NÉM RA (Ví dụ: "Đơn hàng đã hoàn thành...")
+            session.setAttribute("toastMsg", e.getMessage());
+            session.setAttribute("msgType", "warning");
         }
 
         response.sendRedirect("admin-orders");
     }
 
+    private void deleteOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
 
-    private void deleteOrder(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        orderService.deleteOrder(id);
+            Order order = orderService.getOrderById(id);
+
+            if (order == null) {
+                session.setAttribute("toastMsg", "Đơn hàng không tồn tại!");
+                session.setAttribute("msgType", "danger");
+                response.sendRedirect("admin-orders");
+                return;
+            }
+
+            String result = orderService.deleteOrder(id);
+
+            if ("SUCCESS".equals(result)) {
+                // 3. Giải phóng xe về trạng thái AVAILABLE
+                carService.updateCarStatus(order.getCarId(), "AVAILABLE");
+
+                session.setAttribute("toastMsg", "Xóa đơn hàng thành công và đã giải phóng xe!");
+                session.setAttribute("msgType", "success");
+            } else {
+                session.setAttribute("toastMsg", result);
+                session.setAttribute("msgType", "warning");
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("toastMsg", "ID đơn hàng không hợp lệ!");
+            session.setAttribute("msgType", "danger");
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.setAttribute("toastMsg", "Lỗi hệ thống: " + e.getMessage());
+            session.setAttribute("msgType", "danger");
+        }
+
         response.sendRedirect("admin-orders");
     }
 
-    private void insertOrder(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    private void insertOrder(HttpServletRequest request, HttpServletResponse response)throws IOException {
         try {
             Order newOrder = new Order();
             newOrder.setUserId(Integer.parseInt(request.getParameter("userId")));
