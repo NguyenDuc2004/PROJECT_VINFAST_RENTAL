@@ -23,16 +23,16 @@
                 <div class="col-md-3">
                     <label class="form-label fw-bold small text-muted">Tìm kiếm</label>
                     <input type="text" name="keyword" class="form-control bg-light"
-                           placeholder="Tên sản phẩm..." value="${param.keyword}">
+                           placeholder="Tên sản phẩm..." value="${keyword}">
                 </div>
 
                 <div class="col-md-2">
                     <label class="form-label fw-bold small text-muted">Trạng thái</label>
                     <select name="status" class="form-select bg-light">
                         <option value="">-- Tất cả --</option>
-                        <option value="AVAILABLE" ${param.status == 'AVAILABLE' ? 'selected' : ''}>Còn hàng</option>
-                        <option value="UNAVAILABLE" ${param.status == 'UNAVAILABLE' ? 'selected' : ''}>Hết hàng</option>
-                        <option value="DELETED" ${param.status == 'DELETED' ? 'selected' : ''}>Xóa mềm</option>
+                        <option value="AVAILABLE" ${status == 'AVAILABLE' ? 'selected' : ''}>Còn hàng</option>
+                        <option value="UNAVAILABLE" ${status == 'UNAVAILABLE' ? 'selected' : ''}>Hết hàng</option>
+                        <option value="DELETED" ${status == 'DELETED' ? 'selected' : ''}>Xóa mềm</option>
                     </select>
                 </div>
 
@@ -40,9 +40,9 @@
                     <label class="form-label fw-bold small text-muted">Danh mục</label>
                     <select name="category" class="form-select bg-light">
                         <option value="">-- Tất cả --</option>
-                        <option value="1" ${param.category == '1' ? 'selected' : ''}>SUV</option>
-                        <option value="2" ${param.category == '2' ? 'selected' : ''}>SEDAN</option>
-                        <option value="3" ${param.category == '3' ? 'selected' : ''}>HATCHBACK</option>
+                        <option value="1" ${category == '1' ? 'selected' : ''}>SUV</option>
+                        <option value="2" ${category == '2' ? 'selected' : ''}>SEDAN</option>
+                        <option value="3" ${category == '3' ? 'selected' : ''}>HATCHBACK</option>
                     </select>
                 </div>
                 <div class="col-md-3">
@@ -50,7 +50,7 @@
                     <select name="locationId" class="form-select bg-light">
                         <option value="">-- Tất cả --</option>
                         <c:forEach items="${listLocations}" var="loc">
-                            <option value="${loc.id}" ${param.locationId == loc.id ? 'selected' : ''}>${loc.name}</option>
+                            <option value="${loc.id}" ${locationId == loc.id ? 'selected' : ''}>${loc.name}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -75,7 +75,7 @@
                 <tr>
                     <th class="ps-4">ID</th>
                     <th class="ps-4">SẢN PHẨM</th>
-                    <th>ĐỊA ĐIỂM</th> <%-- Cột mới --%>
+                    <th>ĐỊA ĐIỂM</th>
                     <th>GIÁ</th>
                     <th>TRẠNG THÁI</th>
                     <th>NGÀY TẠO</th>
@@ -86,9 +86,7 @@
                 <tbody>
                 <c:forEach items="${listProduct}" var="p">
                     <tr>
-                        <td>
-                            <div class="small">${p.id}</div>
-                        </td>
+                        <td><div class="small">${p.id}</div></td>
                         <td class="ps-4">
                             <div class="d-flex align-items-center">
                                 <c:set var="img" value="${p.imageUrl}"/>
@@ -104,16 +102,10 @@
                                 </div>
                             </div>
                         </td>
-
-                            <%-- Hiển thị tên địa điểm --%>
-                        <td>
-                            <div class="small"><i class="bi bi-geo-alt-fill text-danger me-1"></i>${p.locationName}</div>
-                        </td>
-
+                        <td><div class="small"><i class="bi bi-geo-alt-fill text-danger me-1"></i>${p.locationName}</div></td>
                         <td class="fw-bold text-primary">
                             <fmt:formatNumber value="${p.pricePerDay}" pattern="#,###"/> VND
                         </td>
-
                         <td>
                             <c:choose>
                                 <c:when test="${p.status == 'AVAILABLE'}">
@@ -127,18 +119,14 @@
                                 </c:otherwise>
                             </c:choose>
                         </td>
-
-                        <td class="small text-muted">20-4-2026</td>
-
+                        <td class="small text-muted">20-04-2026</td>
                         <td class="text-end pe-4">
                             <div class="btn-group">
-                                <a href="${pageContext.request.contextPath}/product?action=view-car&id=${p.id}"
-                                   class="btn btn-sm btn-light border">
+                                <a href="${pageContext.request.contextPath}/product?action=view-car&id=${p.id}" class="btn btn-sm btn-light border">
                                     <i class="bi bi-eye text-success"></i>
                                 </a>
                                 <c:if test="${sessionScope.currUser.role == 1 || sessionScope.currUser.role == 2}">
-                                    <a href="${pageContext.request.contextPath}/product?action=edit-car&id=${p.id}"
-                                       class="btn btn-sm btn-light border">
+                                    <a href="${pageContext.request.contextPath}/product?action=edit-car&id=${p.id}" class="btn btn-sm btn-light border">
                                         <i class="bi bi-pencil-square text-primary"></i>
                                     </a>
                                     <button onclick="confirmDelete(${p.id})" class="btn btn-sm btn-light border">
@@ -152,8 +140,38 @@
                 </tbody>
             </table>
         </div>
-        <div class="p-3 bg-light text-end border-top">
-            Tổng sản phẩm: <span class="fw-bold text-primary">${fn:length(listProduct)}</span>
+
+        <%-- Footer bảng: Tổng số & Phân trang --%>
+        <div class="d-flex justify-content-between align-items-center p-3 bg-white border-top">
+            <div class="small text-muted">
+                Tổng số xe: <span class="fw-bold text-primary">${totalRecords}</span> |
+                Trang <strong>${currentPage}</strong> / <strong>${totalPages}</strong>
+            </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <a class="page-link shadow-none" href="?page=${currentPage - 1}&keyword=${keyword}&status=${status}&category=${category}&locationId=${locationId}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                            <a class="page-link shadow-none ${currentPage == i ? 'bg-primary border-primary' : ''}"
+                               href="?page=${i}&keyword=${keyword}&status=${status}&category=${category}&locationId=${locationId}">
+                                    ${i}
+                            </a>
+                        </li>
+                    </c:forEach>
+
+                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                        <a class="page-link shadow-none" href="?page=${currentPage + 1}&keyword=${keyword}&status=${status}&category=${category}&locationId=${locationId}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -164,34 +182,27 @@
         <div class="modal-content border-0 shadow-lg rounded-3">
             <form action="product" method="post">
                 <input type="hidden" name="action" value="create">
-
                 <div class="modal-header bg-primary text-white">
                     <h5 class="fw-bold mb-0"><i class="bi bi-plus-circle-fill me-2"></i> Thêm xe mới</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-8">
                             <label class="fw-bold small mb-1 text-secondary text-uppercase">Tên sản phẩm</label>
                             <input type="text" name="name" class="form-control" placeholder="Nhập tên xe..." required>
                         </div>
-
                         <div class="col-md-4">
-                            <label class="fw-bold small mb-1 text-secondary text-uppercase">Biển số (nếu có)</label>
+                            <label class="fw-bold small mb-1 text-secondary text-uppercase">Biển số</label>
                             <input type="text" name="licensePlate" class="form-control" placeholder="29A-123.45">
                         </div>
-
                         <div class="col-md-6">
                             <label class="fw-bold small mb-1 text-secondary text-uppercase">Giá thuê (VNĐ/ngày)</label>
                             <div class="input-group">
-                                <input type="text" name="price" id="add_price"
-                                       class="form-control fw-bold text-primary"
-                                       placeholder="Ví dụ: 500.000" required>
+                                <input type="text" name="price" id="add_price" class="form-control fw-bold text-primary" placeholder="Ví dụ: 500.000" required>
                                 <span class="input-group-text bg-light">VND</span>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <label class="fw-bold small mb-1 text-secondary text-uppercase">Danh mục</label>
                             <select name="categoryId" class="form-select">
@@ -200,8 +211,6 @@
                                 <option value="3">HATCHBACK</option>
                             </select>
                         </div>
-
-                        <%-- Thêm chọn Địa điểm trong Modal --%>
                         <div class="col-md-6">
                             <label class="fw-bold small mb-1 text-secondary text-uppercase">Điểm nhận xe</label>
                             <select name="locationId" class="form-select">
@@ -210,23 +219,19 @@
                                 </c:forEach>
                             </select>
                         </div>
-
                         <div class="col-md-6">
-                            <label class="fw-bold small mb-1 text-secondary text-uppercase">Trạng thái xe</label>
+                            <label class="fw-bold small mb-1 text-secondary text-uppercase">Trạng thái</label>
                             <select name="status" class="form-select">
                                 <option value="AVAILABLE">Còn hàng</option>
                                 <option value="UNAVAILABLE">Hết hàng</option>
                             </select>
                         </div>
-
                         <div class="col-12">
                             <label class="fw-bold small mb-1 text-secondary text-uppercase">Link ảnh (URL)</label>
-                            <input type="text" name="imageUrl" class="form-control"
-                                   placeholder="Dán đường dẫn ảnh tại đây...">
+                            <input type="text" name="imageUrl" class="form-control" placeholder="Dán đường dẫn ảnh tại đây...">
                         </div>
                     </div>
                 </div>
-
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Hủy</button>
                     <button type="submit" class="btn btn-primary px-4 fw-bold">Lưu lại</button>
@@ -237,7 +242,6 @@
 </div>
 
 <script>
-    // Giữ nguyên các script confirmDelete và priceInput của bạn
     function confirmDelete(id) {
         Swal.fire({
             title: 'Xác nhận xóa?',

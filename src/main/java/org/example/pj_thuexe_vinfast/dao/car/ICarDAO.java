@@ -6,7 +6,7 @@ import org.example.pj_thuexe_vinfast.modal.Location;
 import java.util.List;
 
 public interface ICarDAO {
-    List<Car> filterSearchCars(String keyword, String status, String category,String location);
+    List<Car> filterSearchCars(String keyword, String status, String category,String location, int page, int pageSize);
 
     List<Location> getLocation();
 
@@ -21,6 +21,8 @@ public interface ICarDAO {
     public boolean updateStatus(int carId, String status);
 
     int getCountProduct(String... statuses);
+
+    public int countFilterCars(String keyword, String status, String category, String location);
 
 
 }

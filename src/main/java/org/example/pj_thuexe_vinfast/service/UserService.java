@@ -133,16 +133,16 @@ public class UserService {
             throw new RuntimeException("Email không được để trống!");
 
         if (userDAO.checkEmailExists(email)) {
-            throw new RuntimeException("Email này đã được sử dụng rồi anh ơi!");
+            throw new RuntimeException("Email này đã được sử dụng rồi!");
         }
 
         if (password == null || password.length() < 6) {
-            throw new RuntimeException("Mật khẩu ít nhất phải 6 ký tự nhé!");
+            throw new RuntimeException("Mật khẩu ít nhất phải 6 ký tự!");
         }
 
         boolean isSuccess = userDAO.register(fullname, email, password, phone);
         if (!isSuccess) {
-            throw new RuntimeException("Lỗi Database rồi, bảo Đức kiểm tra lại SQL đi!");
+            throw new RuntimeException("Lỗi Database rồi, kiểm tra lại SQL!");
         }
     }
 

@@ -51,14 +51,38 @@ public class CarServlet extends HttpServlet {
             }
 
             // HIỂN THỊ DANH SÁCH
+            int page = 1;
+            int pageSize = 5; // Số xe trên 1 trang
+            String pageRaw = req.getParameter("page");
+            if (pageRaw != null && !pageRaw.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageRaw);
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+
             String keyword = req.getParameter("keyword");
             String status = req.getParameter("status");
             String category = req.getParameter("category");
             String locationId = req.getParameter("locationId");
 
-            List<Car> list = carService.getAllCars(keyword, status, category, locationId);
+            int totalRecords = carService.countAllCars(keyword, status, category, locationId);
+            List<Car> list = carService.getAllCars(keyword, status, category, locationId, page, pageSize);
+
+
+            int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
 
             req.setAttribute("listProduct", list);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPages", totalPages);
+            req.setAttribute("totalRecords", totalRecords);
+
+            req.setAttribute("keyword", keyword);
+            req.setAttribute("status", status);
+            req.setAttribute("category", category);
+            req.setAttribute("locationId", locationId);
+
             req.setAttribute("view", "products");
             req.getRequestDispatcher("admin/layout.jsp").forward(req, resp);
 

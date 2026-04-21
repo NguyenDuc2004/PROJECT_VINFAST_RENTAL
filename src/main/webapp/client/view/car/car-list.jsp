@@ -10,7 +10,7 @@
         --text-muted: #94a3b8;
     }
 
-    .list-section { background-color: var(--bg-soft); min-height: 100vh; padding-bottom: 50px; }
+    .list-section { background-color: var(--bg-soft); min-height: 100vh; padding-bottom: 80px; }
 
     /* 1. TIÊU ĐỀ TRANG */
     .page-header {
@@ -22,7 +22,7 @@
     /* 2. THANH TÌM KIẾM PHONG CÁCH FLOATING CARD */
     .search-floating-container {
         max-width: 1100px;
-        margin: -45px auto 40px; /* Đẩy nổi lên trên */
+        margin: -45px auto 40px;
         position: relative;
         z-index: 100;
         padding: 0 15px;
@@ -70,9 +70,6 @@
         padding: 0;
     }
 
-    .price-range-inputs { display: flex; align-items: center; gap: 8px; }
-    .price-range-inputs input { width: 75px; }
-
     .btn-main-search {
         background: var(--text-dark);
         color: white;
@@ -97,44 +94,47 @@
     }
     .filter-btn.active, .filter-btn:hover { background: var(--text-dark); color: white; border-color: var(--text-dark); }
 
-    /* 4. CARD XE CAO CẤP - BẤM CẢ BOX */
+    /* 4. CARD XE */
     .car-card-link { text-decoration: none !important; display: block; color: inherit; height: 100%; }
-
     .car-card-premium {
         border: none; border-radius: 30px; background: white;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden; height: 100%; border: 1px solid rgba(0,0,0,0.04);
     }
-
     .car-card-link:hover .car-card-premium {
         transform: translateY(-12px);
         box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
     }
-
-    .car-img-box {
-        width: 100%; height: 260px; background: #f8fafc; overflow: hidden; position: relative;
-    }
-
+    .car-img-box { width: 100%; height: 260px; background: #f8fafc; overflow: hidden; position: relative; }
     .car-img-premium { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
     .car-card-link:hover .car-img-premium { transform: scale(1.1); }
 
-    /* GIÁ THUÊ - TONE MÀU SANG TRỌNG */
     .price-row {
         margin-top: 15px; padding-top: 15px;
         border-top: 1px solid #f1f5f9;
         display: flex; justify-content: space-between; align-items: center;
     }
-
     .price-val { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); }
     .price-sub { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-
     .spec-tag { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); background: #f1f5f9; padding: 4px 12px; border-radius: 6px; }
+
+    /* 5. PHÂN TRANG CUSTOM */
+    .pagination-wrapper { margin-top: 60px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+    .custom-pagination { display: flex; gap: 8px; list-style: none; padding: 0; }
+    .page-item-link {
+        width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+        border-radius: 14px; background: white; color: var(--text-dark);
+        font-weight: 700; text-decoration: none; border: 1px solid #e2e8f0; transition: all 0.3s;
+    }
+    .page-item-link:hover { border-color: var(--text-dark); transform: translateY(-2px); }
+    .page-item-link.active { background: var(--text-dark); color: white; border-color: var(--text-dark); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    .page-item-link.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 </style>
 
 <div class="list-section">
     <div class="page-header text-center">
         <div class="container">
-            <h1 class="fw-800 display-5 mb-2">ĐỘI XE VINFAST</h1>
+            <h1 class="fw-800 display-5 mb-2" style="font-weight: 800;">ĐỘI XE VINFAST</h1>
             <p class="text-muted fw-500 small">Trải nghiệm di chuyển xanh cùng công nghệ hàng đầu Việt Nam</p>
         </div>
     </div>
@@ -144,39 +144,31 @@
             <div class="search-card-wrapper">
                 <div class="search-column">
                     <label>Bạn muốn thuê xe gì?</label>
-                    <input type="text" name="keyword" placeholder="Nhập tên xe..." value="${param.keyword}">
+                    <input type="text" name="keyword" placeholder="Nhập tên xe..." value="${keyword}">
                 </div>
 
                 <div class="search-column">
-                        <label class="form-label fw-bold small text-muted">Loại xe</label>
-                        <select name="category" class="form-select bg-light">
-                            <option value="">-- Tất cả --</option>
-                            <option value="1" ${param.category == '1' ? 'selected' : ''}>SUV</option>
-                            <option value="2" ${param.category == '2' ? 'selected' : ''}>SEDAN</option>
-                            <option value="3" ${param.category == '3' ? 'selected' : ''}>HATCHBACK</option>
-                        </select>
+                    <label>Loại xe</label>
+                    <select name="category">
+                        <option value="">-- Tất cả --</option>
+                        <option value="1" ${category == '1' ? 'selected' : ''}>SUV</option>
+                        <option value="2" ${category == '2' ? 'selected' : ''}>SEDAN</option>
+                        <option value="3" ${category == '3' ? 'selected' : ''}>HATCHBACK</option>
+                    </select>
                 </div>
 
                 <div class="search-column">
-                    <label class="form-label fw-bold small text-muted">Khu vực</label>
-                    <select name="locationId" class="form-select bg-light">
+                    <label>Khu vực</label>
+                    <select name="locationId">
                         <option value="">-- Tất cả --</option>
                         <c:forEach items="${listLocations}" var="loc">
-                            <option value="${loc.id}" ${param.locationId == loc.id ? 'selected' : ''}>${loc.name}</option>
+                            <option value="${loc.id}" ${locationId == loc.id ? 'selected' : ''}>${loc.name}</option>
                         </c:forEach>
                     </select>
                 </div>
 
-<%--                <div class="search-column">--%>
-<%--                    <label>Ngân sách / Ngày</label>--%>
-<%--                    <div class="price-range-inputs">--%>
-<%--                        <input type="number" name="minPrice" placeholder="Từ" value="${param.minPrice}">--%>
-<%--                        <input type="number" name="maxPrice" placeholder="Đến" value="${param.maxPrice}">--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-
                 <button type="submit" class="btn-main-search shadow-sm">
-                    <i class="bi bi-search fs-4"></i>
+                    <i class="bi bi-search fs-4 text-white"></i>
                 </button>
             </div>
         </form>
@@ -185,11 +177,11 @@
     <div class="container">
         <div class="filter-pills">
             <a href="${pageContext.request.contextPath}/cars"
-               class="filter-btn ${empty param.categoryId ? 'active' : ''}">TẤT CẢ XE</a>
-            <c:forEach items="${listCategories}" var="cat">
-                <a href="${pageContext.request.contextPath}/cars?categoryId=${cat.id}"
-                   class="filter-btn ${param.categoryId == cat.id ? 'active' : ''}">${cat.name}</a>
-            </c:forEach>
+               class="filter-btn ${empty category ? 'active' : ''}">TẤT CẢ XE</a>
+            <option value="1" style="display:none"></option>
+            <a href="${pageContext.request.contextPath}/cars?category=1" class="filter-btn ${category == '1' ? 'active' : ''}">SUV</a>
+            <a href="${pageContext.request.contextPath}/cars?category=2" class="filter-btn ${category == '2' ? 'active' : ''}">SEDAN</a>
+            <a href="${pageContext.request.contextPath}/cars?category=3" class="filter-btn ${category == '3' ? 'active' : ''}">HATCHBACK</a>
         </div>
 
         <div class="row g-4">
@@ -201,10 +193,10 @@
                                 <div class="card car-card-premium shadow-sm">
                                     <div class="car-img-box">
                                         <div class="position-absolute top-0 start-0 p-3" style="z-index: 2;">
-                                            <span class="badge bg-white text-dark shadow-sm rounded-pill fw-800 py-2 px-3" style="font-size: 0.65rem;">
+                                            <span class="badge bg-white text-dark shadow-sm rounded-pill fw-800 py-2 px-3" style="font-size: 0.65rem; font-weight: 800;">
                                                 <i class="bi ${car.status == 'AVAILABLE' ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'} me-1"></i>
                                                 <span class="${car.status == 'AVAILABLE' ? 'text-success' : 'text-secondary'}">
-                                                     ${car.status == "AVAILABLE" ? "SẴN SÀNG" : "HẾT XE"}
+                                                        ${car.status == "AVAILABLE" ? "SẴN SÀNG" : "HẾT XE"}
                                                 </span>
                                             </span>
                                         </div>
@@ -213,7 +205,7 @@
                                     </div>
 
                                     <div class="card-body p-4">
-                                        <h3 class="fw-800 text-dark mb-1 h4">${car.modelName}</h3>
+                                        <h3 class="fw-800 text-dark mb-1 h4" style="font-weight: 800;">${car.modelName}</h3>
                                         <div class="d-flex align-items-center gap-2 mb-3 text-muted" style="font-size: 0.8rem;">
                                             <i class="bi bi-geo-alt-fill text-danger"></i> ${car.locationName}
                                         </div>
@@ -247,5 +239,37 @@
                 </c:otherwise>
             </c:choose>
         </div>
+
+        <c:if test="${totalPages >= 1}">
+            <div class="pagination-wrapper">
+                <div class="small text-muted fw-600">
+                    Trang <strong>${currentPage}</strong> trên <strong>${totalPages}</strong>
+                </div>
+                <ul class="custom-pagination">
+                    <li>
+                        <a href="?page=${currentPage - 1}&keyword=${keyword}&category=${category}&locationId=${locationId}"
+                           class="page-item-link ${currentPage == 1 ? 'disabled' : ''}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li>
+                            <a href="?page=${i}&keyword=${keyword}&category=${category}&locationId=${locationId}"
+                               class="page-item-link ${currentPage == i ? 'active' : ''}">
+                                    ${i}
+                            </a>
+                        </li>
+                    </c:forEach>
+
+                    <li>
+                        <a href="?page=${currentPage + 1}&keyword=${keyword}&category=${category}&locationId=${locationId}"
+                           class="page-item-link ${currentPage == totalPages ? 'disabled' : ''}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </c:if>
     </div>
 </div>

@@ -99,7 +99,7 @@
                         <i class="bi bi-car-front-fill"></i>
                     </div>
                     <div>
-                        <p class="mb-0 stat-label fw-bold text-uppercase">Đội xe</p>
+                        <p class="mb-0 stat-label fw-bold text-uppercase">Tổng xe</p>
                         <h4 class="mb-0 fw-bold text-dark">${TotalCar != null ? TotalCar : 0}</h4>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
 
         <div class="col-lg-4">
             <div class="chart-card shadow-sm h-100 text-center">
-                <h5 class="fw-bold mb-4 text-start">Tình trạng đội xe</h5>
+                <h5 class="fw-bold mb-4 text-start">Tình trạng xe</h5>
                 <div style="height: 250px;">
                     <canvas id="carStatusChart"></canvas>
                 </div>

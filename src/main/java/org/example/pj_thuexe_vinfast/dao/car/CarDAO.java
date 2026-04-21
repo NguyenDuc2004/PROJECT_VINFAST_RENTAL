@@ -14,7 +14,7 @@ import static org.example.pj_thuexe_vinfast.dbConnection.DbConnection.getConnect
 public class CarDAO implements ICarDAO {
 
     @Override
-    public List<Car> filterSearchCars(String keyword, String status, String category,String location) {
+    public List<Car> filterSearchCars(String keyword, String status, String category, String location, int page, int pageSize) {
         List<Car> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT c.*, cat.name AS category_name, loc.name AS location_name ");
         sql.append("FROM cars c ");
@@ -23,14 +23,13 @@ public class CarDAO implements ICarDAO {
         sql.append("WHERE 1=1 ");
 
         if (keyword != null && !keyword.isEmpty()) sql.append(" AND model_name LIKE ?");
-        if (status != null && !status.isEmpty()) {
-            sql.append(" AND status = ?");
-        }
+        if (status != null && !status.isEmpty()) sql.append(" AND status = ?");
         else sql.append(" AND c.status IN ('AVAILABLE', 'UNAVAILABLE')");
-        if (location != null && !location.isEmpty()) {
-            sql.append(" AND location_id = ?");
-        }
+        if (location != null && !location.isEmpty()) sql.append(" AND location_id = ?");
         if (category != null && !category.isEmpty()) sql.append(" AND category_id = ?");
+
+        // --- THÊM PHÂN TRANG  ---
+        sql.append(" LIMIT ?, ?");
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
@@ -38,8 +37,13 @@ public class CarDAO implements ICarDAO {
             int index = 1;
             if (keyword != null && !keyword.isEmpty()) ps.setString(index++, "%" + keyword + "%");
             if (status != null && !status.isEmpty()) ps.setString(index++, status);
-            if (category != null && !category.isEmpty()) ps.setInt(index++, Integer.parseInt(category));
             if (location != null && !location.isEmpty()) ps.setInt(index++, Integer.parseInt(location));
+            if (category != null && !category.isEmpty()) ps.setInt(index++, Integer.parseInt(category));
+
+            // Set giá trị cho LIMIT
+            int offset = (page - 1) * pageSize;
+            ps.setInt(index++, offset);
+            ps.setInt(index, pageSize);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -57,10 +61,66 @@ public class CarDAO implements ICarDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Lỗi filterSearchCars: " + e.getMessage());
             e.printStackTrace();
         }
         return list;
+    }
+
+    @Override
+    public int countFilterCars(String keyword, String status, String category, String location) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM cars c ");
+        sql.append("JOIN categories cat ON c.category_id = cat.id ");
+        sql.append("WHERE 1=1 ");
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND c.model_name LIKE ?");
+        }
+
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND c.status = ?");
+        } else {
+            sql.append(" AND c.status IN ('AVAILABLE', 'UNAVAILABLE')");
+        }
+
+        if (location != null && !location.trim().isEmpty()) {
+            sql.append(" AND c.location_id = ?");
+        }
+
+        if (category != null && !category.trim().isEmpty()) {
+            sql.append(" AND c.category_id = ?");
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int index = 1;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                ps.setString(index++, "%" + keyword + "%");
+            }
+
+            if (status != null && !status.trim().isEmpty()) {
+                ps.setString(index++, status);
+            }
+
+            if (location != null && !location.trim().isEmpty()) {
+                ps.setInt(index++, Integer.parseInt(location));
+            }
+
+            if (category != null && !category.trim().isEmpty()) {
+                ps.setInt(index++, Integer.parseInt(category));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int total = rs.getInt(1);
+                System.out.println("DEBUG: SQL Count -> " + sql.toString()); // Log ra để anh check
+                System.out.println("DEBUG: Total Records Found -> " + total);
+                return total;
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi countFilterCars: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override

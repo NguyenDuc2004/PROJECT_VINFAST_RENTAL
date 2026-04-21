@@ -12,8 +12,8 @@ import java.util.List;
 public class CarService {
     private final ICarDAO carDAO = new CarDAO();
     IOrderDAO orderDAO = new OrderDAO();
-    public List<Car> getAllCars(String keyword, String status, String category,String location) {
-        return carDAO.filterSearchCars(keyword, status, category,location);
+    public List<Car> getAllCars(String keyword, String status, String category,String location, int page, int pageSize) {
+        return carDAO.filterSearchCars(keyword, status, category,location,page,pageSize);
     }
 
     public List<Location> getAllLocations() {
@@ -98,4 +98,10 @@ public class CarService {
     public int getTotalCarsCount(String... statuses) {
         return carDAO.getCountProduct(statuses);
     }
+
+    public int countAllCars(String keyword, String status, String category, String location) {
+        return carDAO.countFilterCars(keyword, status, category, location);
+    }
+
+
 }
