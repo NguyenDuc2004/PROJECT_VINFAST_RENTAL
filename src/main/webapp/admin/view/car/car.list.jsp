@@ -144,7 +144,7 @@
         <%-- Footer bảng: Tổng số & Phân trang --%>
         <div class="d-flex justify-content-between align-items-center p-3 bg-white border-top">
             <div class="small text-muted">
-                Tổng số xe: <span class="fw-bold text-primary">${totalRecords}</span> |
+                Tổng số xe: <span class="fw-bold text-primary">${fn:length(listProduct)}</span> |
                 Trang <strong>${currentPage}</strong> / <strong>${totalPages}</strong>
             </div>
 
@@ -275,3 +275,43 @@
         });
     }
 </script>
+<style>
+    /* Làm đẹp Footer phân trang */
+    .pagination .page-link {
+        border-radius: 8px !important; /* Bo góc cho hiện đại */
+        margin: 0 3px;               /* Khoảng cách giữa các nút */
+        color: #4a5568;              /* Màu chữ xám đậm */
+        border: 1px solid #e2e8f0;   /* Viền mảnh */
+        font-weight: 600;
+        transition: all 0.2s ease;
+        padding: 6px 12px;           /* Kích thước nút vừa vặn */
+    }
+
+    /* Khi di chuột vào nút (hover) */
+    .pagination .page-link:hover:not(.active) {
+        background-color: #f1f5f9;
+        color: #0062ff;
+        border-color: #0062ff;
+    }
+
+    /* Nút đang được chọn (Active) - Dùng màu xanh VinFast */
+    .pagination .page-item.active .page-link {
+        background-color: #0062ff !important;
+        border-color: #0062ff !important;
+        color: white !important;
+        box-shadow: 0 4px 10px rgba(0, 98, 255, 0.25); /* Hiệu ứng nổi nhẹ */
+    }
+
+    /* Nút bị vô hiệu hóa (Disabled) */
+    .pagination .page-item.disabled .page-link {
+        background-color: #f8fafc;
+        color: #cbd5e1;
+        border-color: #e2e8f0;
+    }
+
+    /* Xóa cái viền xanh khó chịu khi click (focus) */
+    .page-link.shadow-none:focus {
+        box-shadow: none !important;
+        outline: none;
+    }
+</style>

@@ -17,10 +17,14 @@ public class OrderDAO implements IOrderDAO {
     private static final String DELETE_ORDER_SQL = "DELETE FROM orders WHERE id = ?";
 
     @Override
-    public List<Order> selectAllOrders() {
+    public List<Order> selectAllOrders(int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
+        String sql = SELECT_ALL_ORDERS + " LIMIT ?, ?";
         try (Connection connection = DbConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(SELECT_ALL_ORDERS)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            int offset = (page - 1) * pageSize;
+            ps.setInt(1, offset);
+            ps.setInt(2, pageSize);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 orders.add(mapResultSetToOrder(rs));
@@ -206,5 +210,20 @@ public class OrderDAO implements IOrderDAO {
             e.printStackTrace();
         }
         return revenues;
+    }
+
+    @Override
+    public int countAllOrders() {
+        String sql = "SELECT COUNT(*) FROM orders";
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

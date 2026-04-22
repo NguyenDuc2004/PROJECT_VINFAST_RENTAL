@@ -13,8 +13,8 @@ import java.util.List;
 public class OrderService {
    IOrderDAO orderDAO = new OrderDAO();
 
-    public List<Order> getAllOrders() {
-        return orderDAO.selectAllOrders();
+    public List<Order> getAllOrders(int page, int pageSize) {
+        return orderDAO.selectAllOrders(page , pageSize);
     }
 
     public List<Order> getAllOrdersByUserId(int userId) {
@@ -176,6 +176,10 @@ public class OrderService {
 
     public List<Double> getRevenueLast6Months(){
         return orderDAO.getRevenueLast6Months();
+    }
+
+    public int countAllOrders() {
+       return orderDAO.countAllOrders();
     }
 
 }

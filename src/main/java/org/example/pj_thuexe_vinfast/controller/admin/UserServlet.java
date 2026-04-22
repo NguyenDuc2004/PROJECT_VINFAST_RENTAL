@@ -182,12 +182,36 @@ public class UserServlet extends HttpServlet {
     }
 
     private void filterSearchListUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int page = 1;
+        int pageSize = 6;
+        String pageRaw = req.getParameter("page");
+        if (pageRaw != null && !pageRaw.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageRaw);
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
         String keyword = req.getParameter("keyword");
         String role = req.getParameter("role");
         String status = req.getParameter("status");
-        List<User> users = userService.filterSearchListUser(keyword,role,status);
-        req.setAttribute("listUser",users);
-        req.setAttribute("view","users");
+
+        List<User> users = userService.filterSearchListUser(keyword, role, status, page, pageSize);
+
+        int totalRecords = userService.countFilterUsers(keyword, role, status);
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+
+        req.setAttribute("listUser", users);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("totalRecords", totalRecords);
+
+        req.setAttribute("keyword", keyword);
+        req.setAttribute("role", role);
+        req.setAttribute("status", status);
+
+        req.setAttribute("view", "users");
         req.getRequestDispatcher("admin/layout.jsp").forward(req, resp);
     }
 

@@ -43,14 +43,15 @@ public class UserDAO implements IUserDAO {
         return null;
     }
 
-    @Override
-    public List<User> filterSearchListUser(String keyword,String role,String status) {
+    public List<User> filterSearchListUser(String keyword, String role, String status, int page, int pageSize) {
         List<User> users = new ArrayList<>();
         StringBuilder sql = new StringBuilder(SELECT_USERS);
+
+
         if (keyword != null && !keyword.isEmpty()) {
             sql.append(" AND (fullname LIKE ? OR email LIKE ?) ");
         }
-        if(role != null && !role.isEmpty()){
+        if (role != null && !role.isEmpty()) {
             sql.append(" AND role = ? ");
         }
         if (status != null && !status.isEmpty()) {
@@ -58,9 +59,13 @@ public class UserDAO implements IUserDAO {
         } else {
             sql.append(" AND status = 1 ");
         }
-        try(Connection conn = DbConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql.toString())
-        ) {
+
+        // 2. THÊM PHÂN TRANG
+        sql.append(" LIMIT ?, ? ");
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
             int paramIndex = 1;
             if (keyword != null && !keyword.isEmpty()) {
                 String pattern = "%" + keyword + "%";
@@ -73,22 +78,27 @@ public class UserDAO implements IUserDAO {
             if (status != null && !status.isEmpty()) {
                 ps.setInt(paramIndex++, Integer.parseInt(status));
             }
+
+            // 3. Set giá trị cho phân trang
+            int offset = (page - 1) * pageSize;
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex, pageSize);
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String fullname = rs.getString("fullname");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                String address = rs.getString("address");
-                int getRole = rs.getInt("role");
-                String createAt = rs.getString("created_at");
-                int uStatus = rs.getInt("status");
-                User user = new User(id,fullname, email, phone, address, getRole,uStatus,createAt);
-                users.add(user);
+                users.add(new User(
+                        rs.getInt("id"),
+                        rs.getString("fullname"),
+                        rs.getString("email"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
+                        rs.getInt("role"),
+                        rs.getInt("status"),
+                        rs.getString("created_at")
+                ));
             }
             return users;
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException("Lỗi truy vấn UserDAO: " + e.getMessage());
         }
     }
@@ -215,5 +225,32 @@ public class UserDAO implements IUserDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public int countFilterUsers(String keyword, String role, String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM users WHERE 1=1 ");
+
+        if (keyword != null && !keyword.isEmpty()) sql.append(" AND (fullname LIKE ? OR email LIKE ?) ");
+        if (role != null && !role.isEmpty()) sql.append(" AND role = ? ");
+        if (status != null && !status.isEmpty()) sql.append(" AND status = ? ");
+        else sql.append(" AND status = 1 ");
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int paramIndex = 1;
+            if (keyword != null && !keyword.isEmpty()) {
+                String pattern = "%" + keyword + "%";
+                ps.setString(paramIndex++, pattern);
+                ps.setString(paramIndex++, pattern);
+            }
+            if (role != null && !role.isEmpty()) ps.setInt(paramIndex++, Integer.parseInt(role));
+            if (status != null && !status.isEmpty()) ps.setInt(paramIndex++, Integer.parseInt(status));
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
     }
 }

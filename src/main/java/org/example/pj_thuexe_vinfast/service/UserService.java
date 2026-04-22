@@ -20,7 +20,7 @@ public class UserService {
         }
         return null;
     }
-    public List<User> filterSearchListUser(String keyword,String role,String status){
+    public List<User> filterSearchListUser(String keyword,String role,String status, int page, int pageSize){
         if (keyword != null) {
             keyword = keyword.trim();
         }
@@ -30,7 +30,7 @@ public class UserService {
         if ("".equals(status) || "all".equalsIgnoreCase(status)) {
             status = null;
         }
-        return userDAO.filterSearchListUser(keyword,role,status);
+        return userDAO.filterSearchListUser(keyword,role,status,page,pageSize);
     }
     public int getTotalUser(int role){
         return userDAO.countUser(role);
@@ -152,4 +152,7 @@ public class UserService {
         return password;
     }
 
+    public int countFilterUsers(String keyword, String role, String status){
+        return userDAO.countFilterUsers(keyword,role,status);
+    }
 }

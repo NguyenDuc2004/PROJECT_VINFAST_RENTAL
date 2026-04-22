@@ -4,7 +4,7 @@ import org.example.pj_thuexe_vinfast.modal.Order;
 import java.util.List;
 
 public interface IOrderDAO {
-    List<Order> selectAllOrders();
+    List<Order> selectAllOrders(int page, int pageSize);
 
     Order getOrderById(int id);      // Lấy 1 đơn hàng theo ID
 
@@ -23,4 +23,7 @@ public interface IOrderDAO {
     public double calculateTotalRevenue();
 
     public List<Double> getRevenueLast6Months();
+
+    public int countAllOrders();
+
 }

@@ -66,12 +66,22 @@ public class OrderServlet extends HttpServlet {
         }
     }
 
-    private void listOrders(HttpServletRequest request, HttpServletResponse response)
+    private void listOrders(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        List<Order> listOrder = orderService.getAllOrders();
-        request.setAttribute("listOrder", listOrder);
-        request.setAttribute("view", "orders");
-        request.getRequestDispatcher("admin/layout.jsp").forward(request, response);
+        int page = 1;
+        int pageSize = 10; // Đơn hàng nên để 10 dòng cho dễ quản lý
+        String p = req.getParameter("page");
+        if (p != null && !p.isEmpty()) page = Integer.parseInt(p);
+        List<Order> listOrder = orderService.getAllOrders(page,pageSize);
+        int totalRecords = orderService.countAllOrders();
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+        req.setAttribute("listOrders", listOrder);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("totalRecords", totalRecords);
+
+        req.setAttribute("view", "orders");
+        req.getRequestDispatcher("admin/layout.jsp").forward(req, resp);
     }
 
     private void showOrderDetail(HttpServletRequest request, HttpServletResponse response)
@@ -185,7 +195,7 @@ public class OrderServlet extends HttpServlet {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=danh_sach_don_hang.xlsx");
 
-        List<Order> listOrder = orderService.getAllOrders();
+        List<Order> listOrder = orderService.getAllOrders(1,5);
         try {
             orderService.exportOrdersToExcel(listOrder, response.getOutputStream());
         } catch (Exception e) {
