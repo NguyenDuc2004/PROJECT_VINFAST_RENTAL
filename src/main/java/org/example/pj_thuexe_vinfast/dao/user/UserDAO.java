@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class UserDAO implements IUserDAO {
-    public static final String CHECK_LOGIN = "SELECT u.id,u.fullname, u.email, u.role " +
+    public static final String CHECK_LOGIN = "SELECT u.id,u.fullname, u.email, u.role , u.status " +
             "FROM users u WHERE u.email = ? AND u.password = ? AND u.status = 1";
     public static final String getCountUser = "select Count(*)from users where role = ? AND status = 1;";
     public static final String SELECT_USERS = "select *from users where 1=1";
@@ -34,7 +34,8 @@ public class UserDAO implements IUserDAO {
                 String fullname = rs.getString("fullname");
                 String email_user = rs.getString("email");
                 int role = rs.getInt("role");
-                User user = new User(id, fullname, email_user, role);
+                int status = rs.getInt("status");
+                User user = new User(id, fullname, email_user, role,status);
                 return user;
             }
         } catch (SQLException e) {

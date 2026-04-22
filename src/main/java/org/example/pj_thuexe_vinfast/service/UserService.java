@@ -70,7 +70,7 @@ public class UserService {
         if (user.getId() == currentAdminId && user.getStatus() == 0) {
             throw new Exception("Bạn không thể tự khóa tài khoản của chính mình!");
         }
-        if (user.getId() == currentAdminId && user.getRole() != 1) {
+        if (user.getId() == currentAdminId && oldUser.getRole() == 1 && user.getRole() != 1) {
             throw new Exception("Bạn không thể tự hạ quyền Quản trị viên của chính mình!");
         }
         if (user.getFullname() == null || user.getFullname().trim().isEmpty()) {

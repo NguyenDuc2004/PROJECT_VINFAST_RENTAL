@@ -28,11 +28,12 @@ public class User {
     }
 
     //constructor kiem tra login
-    public User(int id, String fullname, String email, int role) {
+    public User(int id, String fullname, String email, int role,int status) {
         this.id = id;
         this.fullname = fullname;
         this.email = email;
         this.role = role;
+        this.status = status;
     }
 
     public User(int id, String fullname, String email, String phone, String address, int role, int status, String createdAt) {

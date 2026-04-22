@@ -32,7 +32,7 @@ public class HomeServlet extends HttpServlet {
 
         if ("profile".equals(page)) {
             if (currUser == null) {
-                resp.sendRedirect("login"); // Chưa login thì đá ra trang login
+                resp.sendRedirect("login");
                 return;
             }
             try {
@@ -82,35 +82,55 @@ public class HomeServlet extends HttpServlet {
     }
 
     private void updateUserProfile(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        // Sửa lỗi font tiếng Việt cho request
+        req.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
         User currUser = (User) session.getAttribute("currUser");
-
+        System.out.println("status" + currUser.getStatus());
         if (currUser == null) {
             resp.sendRedirect("login");
             return;
         }
+
         try {
-            int id = Integer.parseInt(req.getParameter("id"));
+            int idFromForm = Integer.parseInt(req.getParameter("id"));
+            System.out.println("id: " +idFromForm);
+            if (idFromForm != currUser.getId()) {
+                session.setAttribute("toastMsg", "Thao tác không hợp lệ!");
+                session.setAttribute("toastType", "danger");
+                resp.sendRedirect("home?page=profile");
+                return;
+            }
+
             String fullname = req.getParameter("fullname");
-            String email = req.getParameter("email");
             String phone = req.getParameter("phone");
             String address = req.getParameter("address");
 
-            // Lấy thông tin cũ để giữ Role/Status
-            User oldUser = userService.getDetailUser(id);
-            User userUpdate = new User(id, fullname, email, phone, address, oldUser.getRole(), oldUser.getStatus());
+            User userUpdate = new User();
+            userUpdate.setId(currUser.getId());
+            userUpdate.setFullname(fullname);
+            userUpdate.setEmail(currUser.getEmail());
+            userUpdate.setPhone(phone);
+            userUpdate.setAddress(address);
+            userUpdate.setRole(currUser.getRole());
+            userUpdate.setStatus(currUser.getStatus());
 
-            if (userService.editedUser(userUpdate, id)) {
-                User userChuan = userService.getDetailUser(id);
-                req.getSession().setAttribute("currUser", userChuan);
+            if (userService.editedUser(userUpdate, idFromForm)) {
+                User updatedUser = userService.getDetailUser(idFromForm);
+                session.setAttribute("currUser", updatedUser);
 
-                req.getSession().setAttribute("toastMsg", "Cập nhật thành công!");
-                req.getSession().setAttribute("toastType", "success");
+                session.setAttribute("toastMsg", "Cập nhật hồ sơ thành công!");
+                session.setAttribute("toastType", "success");
             }
         } catch (Exception e) {
-            req.getSession().setAttribute("toastMsg", "Lỗi: " + e.getMessage());
-            req.getSession().setAttribute("toastType", "danger");
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            if(errorMsg.contains("kha")) errorMsg = "Bạn không thể tự thay đổi trạng thái của mình!";
+
+            session.setAttribute("toastMsg", "Lỗi: " + errorMsg);
+            session.setAttribute("toastType", "danger");
         }
+
         resp.sendRedirect("home?page=profile");
     }
 }
