@@ -1,6 +1,4 @@
-Một file README.md chuyên nghiệp không chỉ giúp nhóm của bác (Thành, Đức ,Đào) hiểu cách chạy dự án mà còn làm cho Repo trên Git trông "xịn" hơn hẳn khi đi nộp bài hoặc giới thiệu.
 
-Dưới đây là nội dung file README tôi viết riêng cho dự án VinFast Rental của nhóm:
 
 🚗 VinFast Rental - Hệ Thống Cho Thuê Xe Điện Thông Minh
 VinFast Rental là dự án quản lý cho thuê xe điện VinFast, được phát triển trên nền tảng Java Web (Servlet/JSP). Hệ thống cho phép khách hàng đặt xe trực tuyến và Admin quản lý đội xe, lịch trình thuê xe một cách hiệu quả.
@@ -13,14 +11,14 @@ Xem danh sách xe: Hiển thị các mẫu xe VinFast (VF5, VF8, VF9...) theo ph
 
 Đặt xe: Chọn ngày nhận/trả xe và xem tính toán giá tự động.
 
-Lịch sử thuê: Theo dõi trạng thái đơn hàng (Đang chờ, Đã nhận xe, Hoàn thành).
+Lịch sử thuê: Theo dõi trạng thái đơn hàng (Đang chờ, Đã nhận xe, Hoàn thành,Đã hủy).
 
 🛠️ Dành cho Quản trị viên (Admin)
-Dashboard: Thống kê nhanh tình trạng xe và doanh thu.
+Dashboard: Thống kê nhanh tình trạng xe,đơn hàng và doanh thu.
 
-Quản lý người dùng: Thêm , sửa , Xóa phân quyền
+Quản lý người dùng: Thêm , sửa , Xóa phân quyền ,tìm kiếm
 
-Quản lý xe: Thêm, sửa, xóa thông tin xe, biển số, giá thuê.
+Quản lý xe: Thêm, sửa, xóa thông tin xe, biển số, giá thuê,tìm kiếm.
 
 Duyệt đơn hàng: Cập nhật trạng thái đặt xe của khách hàng.
 
@@ -44,7 +42,7 @@ Mô hình: MVC (Model - View - Controller).
 Chạy file script SQL nằm trong thư mục /database/vinfast_rental.sql (đã bao gồm dữ liệu mẫu của Thành Admin và Đức Admin và Đào Admin).
 
 2. Cấu hình Project
-   Clone dự án về máy: git clone [URL_REPO_CUA_BAC].
+   Clone dự án về máy: git clone [URL].
 
 Mở dự án bằng IntelliJ IDEA.
 
