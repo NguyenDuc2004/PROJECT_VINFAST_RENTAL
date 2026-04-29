@@ -1,63 +1,128 @@
+# 🚗 VinFast Rental - Hệ Thống Cho Thuê Xe Điện
 
+VinFast Rental là hệ thống web cho phép người dùng đặt thuê xe điện VinFast trực tuyến, đồng thời cung cấp công cụ quản lý mạnh mẽ cho quản trị viên.
 
-🚗 VinFast Rental - Hệ Thống Cho Thuê Xe Điện Thông Minh
-VinFast Rental là dự án quản lý cho thuê xe điện VinFast, được phát triển trên nền tảng Java Web (Servlet/JSP). Hệ thống cho phép khách hàng đặt xe trực tuyến và Admin quản lý đội xe, lịch trình thuê xe một cách hiệu quả.
+---
 
-🌟 Tính năng chính
-👤 Dành cho Khách hàng
-Xem danh sách xe: Hiển thị các mẫu xe VinFast (VF5, VF8, VF9...) theo phân khúc và địa điểm.
+## 🌐 Tổng quan
 
-Đăng ký/Đăng nhập: Quản lý tài khoản cá nhân.
+* 👤 Người dùng có thể tìm kiếm và đặt xe dễ dàng
+* 🛠️ Admin quản lý xe, đơn hàng và người dùng
+* ⚡ Hệ thống được xây dựng theo mô hình MVC
 
-Đặt xe: Chọn ngày nhận/trả xe và xem tính toán giá tự động.
+---
 
-Lịch sử thuê: Theo dõi trạng thái đơn hàng (Đang chờ, Đã nhận xe, Hoàn thành,Đã hủy).
+## ✨ Tính năng chính
 
-🛠️ Dành cho Quản trị viên (Admin)
-Dashboard: Thống kê nhanh tình trạng xe,đơn hàng và doanh thu.
+### 👤 Khách hàng
 
-Quản lý người dùng: Thêm , sửa , Xóa phân quyền ,tìm kiếm
+* Xem danh sách xe (VF5, VF8, VF9...)
+* Đăng ký / Đăng nhập
+* Đặt xe theo ngày nhận - trả
+* Tự động tính giá thuê
+* Theo dõi trạng thái đơn hàng
 
-Quản lý xe: Thêm, sửa, xóa thông tin xe, biển số, giá thuê,tìm kiếm.
+---
 
-Duyệt đơn hàng: Cập nhật trạng thái đặt xe của khách hàng.
+### 🛠️ Quản trị viên (Admin)
 
-Nhật ký hệ thống: Theo dõi lịch sử đăng nhập để đảm bảo an toàn.
+* Dashboard thống kê (xe, đơn hàng, doanh thu)
+* Quản lý người dùng (CRUD, phân quyền, tìm kiếm)
+* Quản lý xe (thông tin, biển số, giá thuê)
+* Duyệt và cập nhật trạng thái đơn hàng
+* Nhật ký hệ thống (log đăng nhập)
 
-💻 Công nghệ sử dụng
-Backend: Java Servlet, JSP, JSTL.
+---
 
-Database: MySQL (JDBC).
+## 🛠 Công nghệ sử dụng
 
-Frontend: HTML5, CSS3, JavaScript, Bootstrap 5.
+### Backend
 
-Công cụ: IntelliJ IDEA, Tomcat 9.0, Git.
+* Java Servlet, JSP, JSTL
 
-Mô hình: MVC (Model - View - Controller).
+### Frontend
 
-🚀 Hướng dẫn cài đặt
-1. Cơ sở dữ liệu
-   Mở MySQL Workbench hoặc công cụ quản lý SQL bất kỳ.
+* HTML5, CSS3, JavaScript, Bootstrap 5
 
-Chạy file script SQL nằm trong thư mục /database/vinfast_rental.sql (đã bao gồm dữ liệu mẫu của Thành Admin và Đức Admin và Đào Admin).
+### Database
 
-2. Cấu hình Project
-   Clone dự án về máy: git clone [URL].
+* MySQL (JDBC)
 
-Mở dự án bằng IntelliJ IDEA.
+### Công cụ
 
-Cấu hình file DbConnection.java (trong package dbConnection) để khớp với username và password MySQL của bạn.
+* IntelliJ IDEA
+* Tomcat 9
+* Git
 
-3. Chạy ứng dụng
-   Add server Tomcat 9.0 vào IntelliJ.
+---
 
-Nhấn Run.
+## 🧩 Kiến trúc hệ thống
 
+Mô hình MVC:
 
+User → Servlet (Controller) → Service → JDBC → MySQL → JSP (View)
 
-👥 Thành viên thực hiện (Team)
-Đào Admin - Developer
+---
 
-Đức Admin - Developer
+## 📸 Demo
 
-Thành Admin - Developer
+> Thêm ảnh hoặc GIF tại đây
+
+![dashboard](./screenshots/dashboard.png)
+![car](./screenshots/car.png)
+
+---
+
+## ⚙️ Hướng dẫn cài đặt
+
+### 1. Cấu hình database
+
+* Import file SQL trong thư mục:
+
+```bash
+/database/vinfast_rental.sql
+```
+
+---
+
+### 2. Cấu hình project
+
+```bash
+git clone <repo-url>
+```
+
+* Mở bằng IntelliJ IDEA
+* Cập nhật thông tin DB trong:
+
+```
+DbConnection.java
+```
+
+---
+
+### 3. Chạy ứng dụng
+
+* Cấu hình Tomcat 9
+* Run project
+
+---
+
+## 🚀 Hướng phát triển
+
+* Thêm thanh toán online
+* Tối ưu UI/UX
+* Xây dựng REST API (Spring Boot)
+
+---
+
+## 👥 Thành viên
+
+* Đức - Developer
+* Đào - Developer
+* Thành - Developer
+
+---
+
+## 📫 Liên hệ
+
+* Email: [nkmduc@gmail.com](mailto:your-email@gmail.com)
